@@ -20,6 +20,9 @@ public class clientDTO {
     @Column(name = "phone", nullable = false, length = 10)
     private String phoneClient;
 
+    @Column(name = "status")
+    private int status;
+
     // Getters and Setters
     public int getIdClient() {
         return idClient;
@@ -43,5 +46,13 @@ public class clientDTO {
 
     public void setPhoneClient(String phoneClient) {
         this.phoneClient = phoneClient;
+    }
+
+    public int getStatus() {
+        return status;
+    }
+
+    public void setStatus(int status) {
+        this.status = status;
     }
 }
