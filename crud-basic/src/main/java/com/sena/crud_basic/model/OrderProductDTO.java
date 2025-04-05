@@ -15,7 +15,6 @@ public class OrderProductDTO {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     private int idOrderProduct;
-
     @ManyToOne
     @JoinColumn(name = "idOrders")
     private ordersDTO order;
@@ -24,11 +23,11 @@ public class OrderProductDTO {
     @JoinColumn(name = "idProduct")
     private productsDTO product;
 
-    @Column(name = "order_id", nullable = false)
-    private int orderId;
+    // @Column(name = "order_id", nullable = false)
+    // private int orderId;
 
-    @Column(name = "product_id", nullable = false)
-    private int productId;
+    // @Column(name = "product_id", nullable = false)
+    // private int productId;
 
     @Column(name = "quantity", nullable = false)
     private int quantity;
@@ -48,20 +47,38 @@ public class OrderProductDTO {
         this.idOrderProduct = idOrderProduct;
     }
 
-    public int getOrderId() {
-        return orderId;
+    
+
+    // public int getOrderId() {
+    //     return orderId;
+    // }
+
+    // public void setOrderId(int orderId) {
+    //     this.orderId = orderId;
+    // }
+
+    // public int getProductId() {
+    //     return productId;
+    // }
+
+    // public void setProductId(int productId) {
+    //     this.productId = productId;
+    // }
+
+    public ordersDTO getOrder() {
+        return order;
     }
 
-    public void setOrderId(int orderId) {
-        this.orderId = orderId;
+    public void setOrder(ordersDTO order) {
+        this.order = order;
     }
 
-    public int getProductId() {
-        return productId;
+    public productsDTO getProduct() {
+        return product;
     }
 
-    public void setProductId(int productId) {
-        this.productId = productId;
+    public void setProduct(productsDTO product) {
+        this.product = product;
     }
 
     public int getQuantity() {

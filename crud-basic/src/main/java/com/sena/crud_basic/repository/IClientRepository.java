@@ -12,7 +12,7 @@ public interface IClientRepository extends JpaRepository<clientDTO, Integer> {
     List<clientDTO> findAllClientActive();
 
     // Listar con un filtro
-    @Query("SELECT b FROM client b WHERE b.name LIKE %?1%")
+    @Query("SELECT b FROM client b WHERE b.nameClient LIKE %?1% OR b.phoneClient LIKE %?1%")
     List<clientDTO> search(String filter);
 
     // Listar por ID (ya está incluido en JpaRepository)

@@ -31,16 +31,24 @@ public class ordersDTO {
 
     // Getters and Setters
 
-    public int getIdProduct() {
-        return idOrders;
-    }
+    // public int getIdProduct() {
+    //     return idOrders;
+    // }
 
-    public void setIdProduct(int idProduct) {
-        this.idOrders = idProduct;
-    }
+    // public void setIdProduct(int idProduct) {
+    //     this.idOrders = idProduct;
+    // }
 
     public LocalDate getDateOrder() {
         return dateOrder;
+    }
+
+    public int getIdOrders() {
+        return idOrders;
+    }
+
+    public void setIdOrders(int idOrders) {
+        this.idOrders = idOrders;
     }
 
     public void setDateOrder(LocalDate dateOrder) {

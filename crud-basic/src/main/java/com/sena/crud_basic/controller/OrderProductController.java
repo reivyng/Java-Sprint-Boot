@@ -18,6 +18,7 @@ public class OrderProductController {
     @PostMapping("/")
     public String registerOrderProduct(@RequestBody OrderProductDTO OrderProduct)
     {
+        // OrderProduct.setOrder(new ordersDTO().se;);
         OrderProductService.saveOrderProduct(OrderProduct);
         return "OrderProduct registered";
     }

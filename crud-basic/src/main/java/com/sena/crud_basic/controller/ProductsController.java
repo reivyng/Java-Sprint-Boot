@@ -15,7 +15,7 @@ public class ProductsController {
     @Autowired
     private ProductService productService;
 
-    @PostMapping("/products")
+    @PostMapping("/productos/")
     public productsDTO registerProduct(@RequestBody productsDTO product)
     {
         return productService.saveProduct(product);
