@@ -20,7 +20,24 @@ public class productsDTO {
     @Column(name = "price")
     private double priceProduct;
 
-    // Getters and Setters
+    @Column(name = "status")
+    private int status;
+
+    public productsDTO(int idProduct, String nameProduct, double priceProduct, int status) {
+        this.idProduct = idProduct;
+        this.nameProduct = nameProduct;
+        this.priceProduct = priceProduct;
+        this.status = status;
+    }
+
+    public int getStatus() {
+        return status;
+    }
+
+    public void setStatus(int status) {
+        this.status = status;
+    }
+
     public int getIdProduct() {
         return idProduct;
     }
@@ -44,4 +61,6 @@ public class productsDTO {
     public void setPriceProduct(double priceProduct) {
         this.priceProduct = priceProduct;
     }
+
+    
 }

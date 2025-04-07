@@ -9,7 +9,6 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 
-
 @Entity(name = "orders")
 public class ordersDTO {
 
@@ -29,18 +28,15 @@ public class ordersDTO {
     @Column(name = "date")
     private LocalDate dateOrder;
 
-    // Getters and Setters
+    @Column(name = "status")
+    private int status;
 
-    // public int getIdProduct() {
-    //     return idOrders;
-    // }
-
-    // public void setIdProduct(int idProduct) {
-    //     this.idOrders = idProduct;
-    // }
-
-    public LocalDate getDateOrder() {
-        return dateOrder;
+    public ordersDTO(int idOrders, clientDTO client, sellersDTO seller, LocalDate dateOrder, int status) {
+        this.idOrders = idOrders;
+        this.client = client;
+        this.seller = seller;
+        this.dateOrder = dateOrder;
+        this.status = status;
     }
 
     public int getIdOrders() {
@@ -51,12 +47,36 @@ public class ordersDTO {
         this.idOrders = idOrders;
     }
 
-    public void setDateOrder(LocalDate dateOrder) {
-        this.dateOrder = dateOrder;
-    }
-
     public clientDTO getClient() {
         return client;
+    }
+
+    public void setClient(clientDTO client) {
+        this.client = client;
+    }
+
+    public sellersDTO getSeller() {
+        return seller;
+    }
+
+    public void setSeller(sellersDTO seller) {
+        this.seller = seller;
+    }
+
+    public int getStatus() {
+        return status;
+    }
+
+    public void setStatus(int status) {
+        this.status = status;
+    }
+
+    public LocalDate getDateOrder() {
+        return dateOrder;
+    }
+
+    public void setDateOrder(LocalDate dateOrder) {
+        this.dateOrder = dateOrder;
     }
 
 }

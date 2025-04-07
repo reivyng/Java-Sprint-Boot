@@ -23,11 +23,8 @@ public class OrderProductDTO {
     @JoinColumn(name = "idProduct")
     private productsDTO product;
 
-    // @Column(name = "order_id", nullable = false)
-    // private int orderId;
-
-    // @Column(name = "product_id", nullable = false)
-    // private int productId;
+    @Column(name = "status")
+    private int status;    
 
     @Column(name = "quantity", nullable = false)
     private int quantity;
@@ -38,7 +35,17 @@ public class OrderProductDTO {
     @Column(name = "total", nullable = false)
     private double total;
 
-    // Getters and Setters
+    public OrderProductDTO(int idOrderProduct, ordersDTO order, productsDTO product, int status, int quantity,
+            double price, double total) {
+        this.idOrderProduct = idOrderProduct;
+        this.order = order;
+        this.product = product;
+        this.status = status;
+        this.quantity = quantity;
+        this.price = price;
+        this.total = total;
+    }
+
     public int getIdOrderProduct() {
         return idOrderProduct;
     }
@@ -46,24 +53,6 @@ public class OrderProductDTO {
     public void setIdOrderProduct(int idOrderProduct) {
         this.idOrderProduct = idOrderProduct;
     }
-
-    
-
-    // public int getOrderId() {
-    //     return orderId;
-    // }
-
-    // public void setOrderId(int orderId) {
-    //     this.orderId = orderId;
-    // }
-
-    // public int getProductId() {
-    //     return productId;
-    // }
-
-    // public void setProductId(int productId) {
-    //     this.productId = productId;
-    // }
 
     public ordersDTO getOrder() {
         return order;
@@ -79,6 +68,14 @@ public class OrderProductDTO {
 
     public void setProduct(productsDTO product) {
         this.product = product;
+    }
+
+    public int getStatus() {
+        return status;
+    }
+
+    public void setStatus(int status) {
+        this.status = status;
     }
 
     public int getQuantity() {

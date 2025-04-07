@@ -5,6 +5,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+
 @Entity(name = "sellers")
 public class sellersDTO {
 
@@ -16,7 +17,22 @@ public class sellersDTO {
     @Column(name = "name", nullable = false, length = 100)
     private String nameSeller;
 
-    // Getters and Setters
+    @Column(name = "status")
+    private int status;
+
+    public sellersDTO(int idSeller, String nameSeller, int status) {
+        this.idSeller = idSeller;
+        this.nameSeller = nameSeller;
+        this.status = status;
+    }
+
+    public int getStatus() {
+        return status;
+    }
+
+    public void setStatus(int status) {
+        this.status = status;
+    }
 
     public int getIdSeller() {
         return idSeller;

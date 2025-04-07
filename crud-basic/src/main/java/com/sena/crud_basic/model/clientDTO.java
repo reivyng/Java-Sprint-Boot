@@ -23,7 +23,13 @@ public class clientDTO {
     @Column(name = "status")
     private int status;
 
-    // Getters and Setters
+    public clientDTO(int idClient, String nameClient, String phoneClient, int status) {
+        this.idClient = idClient;
+        this.nameClient = nameClient;
+        this.phoneClient = phoneClient;
+        this.status = status;
+    }
+
     public int getIdClient() {
         return idClient;
     }
@@ -55,4 +61,6 @@ public class clientDTO {
     public void setStatus(int status) {
         this.status = status;
     }
+
+    
 }

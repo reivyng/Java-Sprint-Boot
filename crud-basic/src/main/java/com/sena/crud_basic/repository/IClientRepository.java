@@ -15,6 +15,4 @@ public interface IClientRepository extends JpaRepository<clientDTO, Integer> {
     @Query("SELECT b FROM client b WHERE b.nameClient LIKE %?1% OR b.phoneClient LIKE %?1%")
     List<clientDTO> search(String filter);
 
-    // Listar por ID (ya está incluido en JpaRepository)
-    // Este método no necesita una consulta personalizada porque JpaRepository ya proporciona el método findById.
 }
