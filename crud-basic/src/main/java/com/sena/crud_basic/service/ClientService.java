@@ -28,10 +28,32 @@ public class ClientService {
         return clientRepository.findById(id).orElse(null); // Manejo de null si no se encuentra
     }
 
+    // Guardar o actualizar un cliente
     public clientDTO saveClient(clientDTO client) {
         return clientRepository.save(client);
     }
 
+    // Actualizar todos los datos excepto el ID
+    public responseDTO updateClient(int id, String nameClient, String phoneClient, Integer status) {
+        int rowsUpdated = clientRepository.updateClientById(id, nameClient, phoneClient, status);
+        if (rowsUpdated > 0) {
+            return new responseDTO("OK", "Cliente actualizado correctamente");
+        } else {
+            return new responseDTO("ERROR", "Cliente no encontrado o no se pudo actualizar");
+        }
+    }
+
+    // Eliminar registro por ID
+    public responseDTO deleteClientById(int id) {
+        try {
+            clientRepository.deleteById(id);
+            return new responseDTO("OK", "Cliente eliminado correctamente");
+        } catch (Exception e) {
+            return new responseDTO("ERROR", "Error al eliminar el cliente: " + e.getMessage());
+        }
+    }
+
+    // Eliminar lógicamente
     public responseDTO delete(int id) {
         clientDTO client = getClientById(id);
         if (client != null) {

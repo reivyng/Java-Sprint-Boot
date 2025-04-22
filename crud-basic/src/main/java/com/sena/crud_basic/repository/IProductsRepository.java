@@ -12,6 +12,6 @@ public interface IProductsRepository extends JpaRepository<productsDTO, Integer>
     List<productsDTO> findAllProductsActive();
 
     // Listar con un filtro
-    @Query("SELECT b FROM products b WHERE b.nameProduct LIKE %?1% OR b.priceProduct LIKE %?1%")
+    @Query("SELECT b FROM products b WHERE b.nameProduct LIKE %?1% OR b.priceProduct = ?1")
     List<productsDTO> search(String filter);
 }

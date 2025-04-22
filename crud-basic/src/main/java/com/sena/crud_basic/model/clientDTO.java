@@ -23,6 +23,9 @@ public class clientDTO {
     @Column(name = "status")
     private int status;
 
+    public clientDTO() {
+    }
+
     public clientDTO(int idClient, String nameClient, String phoneClient, int status) {
         this.idClient = idClient;
         this.nameClient = nameClient;
