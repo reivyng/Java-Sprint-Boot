@@ -15,6 +15,7 @@ public class OrderProductDTO {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     private int idOrderProduct;
+
     @ManyToOne
     @JoinColumn(name = "idOrders")
     private ordersDTO order;
@@ -24,7 +25,7 @@ public class OrderProductDTO {
     private productsDTO product;
 
     @Column(name = "status")
-    private int status;    
+    private int status;
 
     @Column(name = "quantity", nullable = false)
     private int quantity;
@@ -35,6 +36,11 @@ public class OrderProductDTO {
     @Column(name = "total", nullable = false)
     private double total;
 
+    // Constructor vacío (necesario para JPA)
+    public OrderProductDTO() {
+    }
+
+    // Constructor completo
     public OrderProductDTO(int idOrderProduct, ordersDTO order, productsDTO product, int status, int quantity,
             double price, double total) {
         this.idOrderProduct = idOrderProduct;
@@ -46,6 +52,7 @@ public class OrderProductDTO {
         this.total = total;
     }
 
+    // Getters y setters
     public int getIdOrderProduct() {
         return idOrderProduct;
     }

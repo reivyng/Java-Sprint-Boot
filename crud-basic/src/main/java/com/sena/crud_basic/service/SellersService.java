@@ -15,7 +15,7 @@ public class SellersService {
 
     // Listar todos los valores activos
     public List<sellersDTO> getAllSellers() {
-        return sellersRepository.findAllClientActive();
+        return sellersRepository.findAllSellersActive();
     }
 
     // Listar con un filtro
@@ -28,10 +28,35 @@ public class SellersService {
         return sellersRepository.findById(id).orElse(null); // Manejo de null si no se encuentra
     }
 
+    // Guardar o actualizar un vendedor
     public sellersDTO saveSeller(sellersDTO seller) {
         return sellersRepository.save(seller);
     }
 
+    // Actualizar todos los datos excepto el ID
+    public responseDTO updateSeller(int id, sellersDTO updatedSeller) {
+        sellersDTO existingSeller = getSellerById(id);
+        if (existingSeller != null) {
+            existingSeller.setNameSeller(updatedSeller.getNameSeller());
+            existingSeller.setStatus(updatedSeller.getStatus());
+            sellersRepository.save(existingSeller);
+            return new responseDTO("OK", "Vendedor actualizado correctamente");
+        } else {
+            return new responseDTO("ERROR", "Vendedor no encontrado");
+        }
+    }
+
+    // Eliminar registro por ID (físico)
+    public responseDTO deleteSellerById(int id) {
+        try {
+            sellersRepository.deleteById(id);
+            return new responseDTO("OK", "Vendedor eliminado correctamente");
+        } catch (Exception e) {
+            return new responseDTO("ERROR", "Error al eliminar el vendedor: " + e.getMessage());
+        }
+    }
+
+    // Eliminar lógicamente
     public responseDTO deleteSeller(int id) {
         sellersDTO seller = getSellerById(id);
         if (seller != null) {

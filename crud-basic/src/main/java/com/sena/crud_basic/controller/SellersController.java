@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import java.util.List;
 
 @RestController
@@ -22,43 +23,58 @@ public class SellersController {
     @Autowired
     private SellersService sellersService;
 
+    // Registrar un vendedor
     @PostMapping("/enviar/")
-    public String registerSeller(@RequestBody sellersDTO seller) {
+    public ResponseEntity<responseDTO> registerSeller(@RequestBody sellersDTO seller) {
         sellersService.saveSeller(seller);
-        return "Seller registered";
+        return new ResponseEntity<>(new responseDTO("OK", "Vendedor registrado correctamente"), HttpStatus.CREATED);
     }
 
     // Listar todos los valores activos
     @GetMapping("/obtener/")
-    public List<sellersDTO> getAllSellers() {
-        return sellersService.getAllSellers();
+    public ResponseEntity<List<sellersDTO>> getAllSellers() {
+        List<sellersDTO> sellers = sellersService.getAllSellers();
+        return new ResponseEntity<>(sellers, HttpStatus.OK);
     }
 
     // Listar con un filtro
     @GetMapping("/search/{filter}")
-    public ResponseEntity<Object> search(@PathVariable String filter) {
-        var sellers = sellersService.getFilteredSellers(filter);
+    public ResponseEntity<List<sellersDTO>> search(@PathVariable String filter) {
+        List<sellersDTO> sellers = sellersService.getFilteredSellers(filter);
         return new ResponseEntity<>(sellers, HttpStatus.OK);
     }
 
     // Listar por ID
     @GetMapping("/{id}")
     public ResponseEntity<Object> getSellerById(@PathVariable int id) {
-        var seller = sellersService.getSellerById(id);
-        return new ResponseEntity<>(seller, HttpStatus.OK);
+        sellersDTO seller = sellersService.getSellerById(id);
+        if (seller != null) {
+            return new ResponseEntity<>(seller, HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(new responseDTO("ERROR", "Vendedor no encontrado"), HttpStatus.NOT_FOUND);
+        }
     }
 
+    // Actualizar todos los datos excepto el ID
+    @PutMapping("/update/{id}")
+    public ResponseEntity<responseDTO> updateSeller(
+            @PathVariable int id,
+            @RequestBody sellersDTO updatedSeller) {
+        responseDTO response = sellersService.updateSeller(id, updatedSeller);
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+
+    // Eliminar un vendedor físicamente por ID
+    @DeleteMapping("/delete/{id}")
+    public ResponseEntity<responseDTO> deleteSellerById(@PathVariable int id) {
+        responseDTO response = sellersService.deleteSellerById(id);
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+
+    // Eliminar un vendedor lógicamente (cambiar estado a inactivo)
     @DeleteMapping("/{id}")
     public ResponseEntity<responseDTO> deleteSeller(@PathVariable int id) {
         responseDTO response = sellersService.deleteSeller(id);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
-
-    /*
-     * GET: consultar
-     * POST: crear registros
-     * PUT: actualizar todo
-     * DELETE: eliminar
-     * PATCH: actualizar parcial
-     */
 }

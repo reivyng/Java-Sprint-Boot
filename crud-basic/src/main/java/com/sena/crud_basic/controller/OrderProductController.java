@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import java.util.List;
 
 @RestController
@@ -22,43 +23,58 @@ public class OrderProductController {
     @Autowired
     private OrderProductService orderProductService;
 
+    // Registrar una relación orden-producto
     @PostMapping("/enviar/")
-    public String registerOrderProduct(@RequestBody OrderProductDTO orderProduct) {
+    public ResponseEntity<responseDTO> registerOrderProduct(@RequestBody OrderProductDTO orderProduct) {
         orderProductService.saveOrderProduct(orderProduct);
-        return "OrderProduct registered";
+        return new ResponseEntity<>(new responseDTO("OK", "Relación orden-producto registrada correctamente"), HttpStatus.CREATED);
     }
 
-    // Listar todos los valores
+    // Listar todas las relaciones activas
     @GetMapping("/obtener/")
-    public List<OrderProductDTO> getAllOrderProducts() {
-        return orderProductService.getAllOrderProducts();
+    public ResponseEntity<List<OrderProductDTO>> getAllOrderProducts() {
+        List<OrderProductDTO> orderProducts = orderProductService.getAllOrderProducts();
+        return new ResponseEntity<>(orderProducts, HttpStatus.OK);
     }
 
     // Listar con un filtro
     @GetMapping("/search/{filter}")
-    public ResponseEntity<Object> search(@PathVariable String filter) {
-        var orderProducts = orderProductService.getFilteredOrderProducts(filter);
+    public ResponseEntity<List<OrderProductDTO>> search(@PathVariable String filter) {
+        List<OrderProductDTO> orderProducts = orderProductService.getFilteredOrderProducts(filter);
         return new ResponseEntity<>(orderProducts, HttpStatus.OK);
     }
 
     // Listar por ID
     @GetMapping("/{id}")
     public ResponseEntity<Object> getOrderProductById(@PathVariable int id) {
-        var orderProduct = orderProductService.getOrderProductById(id);
-        return new ResponseEntity<>(orderProduct, HttpStatus.OK);
+        OrderProductDTO orderProduct = orderProductService.getOrderProductById(id);
+        if (orderProduct != null) {
+            return new ResponseEntity<>(orderProduct, HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(new responseDTO("ERROR", "Relación orden-producto no encontrada"), HttpStatus.NOT_FOUND);
+        }
     }
 
+    // Actualizar todos los datos excepto el ID
+    @PutMapping("/update/{id}")
+    public ResponseEntity<responseDTO> updateOrderProduct(
+            @PathVariable int id,
+            @RequestBody OrderProductDTO updatedOrderProduct) {
+        responseDTO response = orderProductService.updateOrderProduct(id, updatedOrderProduct);
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+
+    // Eliminar una relación físicamente por ID
+    @DeleteMapping("/delete/{id}")
+    public ResponseEntity<responseDTO> deleteOrderProductById(@PathVariable int id) {
+        responseDTO response = orderProductService.deleteOrderProductById(id);
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+
+    // Eliminar una relación lógicamente (cambiar estado a inactivo)
     @DeleteMapping("/{id}")
     public ResponseEntity<responseDTO> deleteOrderProduct(@PathVariable int id) {
         responseDTO response = orderProductService.deleteOrderProduct(id);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
-
-    /*
-     * GET: consultar
-     * POST: crear registros
-     * PUT: actualizar todo
-     * DELETE: eliminar
-     * PATCH: actualizar parcial
-     */
 }
