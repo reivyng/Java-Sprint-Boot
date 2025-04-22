@@ -31,6 +31,11 @@ public class ordersDTO {
     @Column(name = "status")
     private int status;
 
+    // Constructor vacío (necesario para JPA)
+    public ordersDTO() {
+    }
+
+    // Constructor completo
     public ordersDTO(int idOrders, clientDTO client, sellersDTO seller, LocalDate dateOrder, int status) {
         this.idOrders = idOrders;
         this.client = client;
@@ -39,6 +44,7 @@ public class ordersDTO {
         this.status = status;
     }
 
+    // Getters y setters
     public int getIdOrders() {
         return idOrders;
     }
@@ -78,5 +84,4 @@ public class ordersDTO {
     public void setDateOrder(LocalDate dateOrder) {
         this.dateOrder = dateOrder;
     }
-
 }

@@ -23,6 +23,11 @@ public class productsDTO {
     @Column(name = "status")
     private int status;
 
+    // Constructor vacío (necesario para JPA)
+    public productsDTO() {
+    }
+
+    // Constructor completo
     public productsDTO(int idProduct, String nameProduct, double priceProduct, int status) {
         this.idProduct = idProduct;
         this.nameProduct = nameProduct;
@@ -30,14 +35,7 @@ public class productsDTO {
         this.status = status;
     }
 
-    public int getStatus() {
-        return status;
-    }
-
-    public void setStatus(int status) {
-        this.status = status;
-    }
-
+    // Getters y setters
     public int getIdProduct() {
         return idProduct;
     }
@@ -62,5 +60,11 @@ public class productsDTO {
         this.priceProduct = priceProduct;
     }
 
-    
+    public int getStatus() {
+        return status;
+    }
+
+    public void setStatus(int status) {
+        this.status = status;
+    }
 }

@@ -28,10 +28,37 @@ public class OrdersService {
         return ordersRepository.findById(id).orElse(null); // Manejo de null si no se encuentra
     }
 
+    // Guardar o actualizar una orden
     public ordersDTO saveOrder(ordersDTO order) {
         return ordersRepository.save(order);
     }
 
+    // Actualizar todos los datos excepto el ID
+    public responseDTO updateOrder(int id, ordersDTO updatedOrder) {
+        ordersDTO existingOrder = getOrderById(id);
+        if (existingOrder != null) {
+            existingOrder.setClient(updatedOrder.getClient());
+            existingOrder.setSeller(updatedOrder.getSeller());
+            existingOrder.setDateOrder(updatedOrder.getDateOrder());
+            existingOrder.setStatus(updatedOrder.getStatus());
+            ordersRepository.save(existingOrder);
+            return new responseDTO("OK", "Orden actualizada correctamente");
+        } else {
+            return new responseDTO("ERROR", "Orden no encontrada");
+        }
+    }
+
+    // Eliminar registro por ID (físico)
+    public responseDTO deleteOrderById(int id) {
+        try {
+            ordersRepository.deleteById(id);
+            return new responseDTO("OK", "Orden eliminada correctamente");
+        } catch (Exception e) {
+            return new responseDTO("ERROR", "Error al eliminar la orden: " + e.getMessage());
+        }
+    }
+
+    // Eliminar lógicamente
     public responseDTO deleteOrder(int id) {
         ordersDTO order = getOrderById(id);
         if (order != null) {

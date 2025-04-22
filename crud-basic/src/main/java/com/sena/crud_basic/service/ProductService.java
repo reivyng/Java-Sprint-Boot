@@ -28,10 +28,36 @@ public class ProductService {
         return productsRepository.findById(id).orElse(null); // Manejo de null si no se encuentra
     }
 
+    // Guardar o actualizar un producto
     public productsDTO saveProduct(productsDTO product) {
         return productsRepository.save(product);
     }
 
+    // Actualizar todos los datos excepto el ID
+    public responseDTO updateProduct(int id, productsDTO updatedProduct) {
+        productsDTO existingProduct = getProductById(id);
+        if (existingProduct != null) {
+            existingProduct.setNameProduct(updatedProduct.getNameProduct());
+            existingProduct.setPriceProduct(updatedProduct.getPriceProduct());
+            existingProduct.setStatus(updatedProduct.getStatus());
+            productsRepository.save(existingProduct);
+            return new responseDTO("OK", "Producto actualizado correctamente");
+        } else {
+            return new responseDTO("ERROR", "Producto no encontrado");
+        }
+    }
+
+    // Eliminar registro por ID (físico)
+    public responseDTO deleteProductById(int id) {
+        try {
+            productsRepository.deleteById(id);
+            return new responseDTO("OK", "Producto eliminado correctamente");
+        } catch (Exception e) {
+            return new responseDTO("ERROR", "Error al eliminar el producto: " + e.getMessage());
+        }
+    }
+
+    // Eliminar lógicamente
     public responseDTO deleteProduct(int id) {
         productsDTO product = getProductById(id);
         if (product != null) {

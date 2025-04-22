@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import java.util.List;
 
 @RestController
@@ -22,43 +23,58 @@ public class OrdersController {
     @Autowired
     private OrdersService ordersService;
 
+    // Registrar una orden
     @PostMapping("/enviar/")
-    public String registerOrder(@RequestBody ordersDTO order) {
+    public ResponseEntity<responseDTO> registerOrder(@RequestBody ordersDTO order) {
         ordersService.saveOrder(order);
-        return "Order registered";
+        return new ResponseEntity<>(new responseDTO("OK", "Orden registrada correctamente"), HttpStatus.CREATED);
     }
 
-    // Listar todos los valores activos
+    // Listar todas las órdenes activas
     @GetMapping("/obtener/")
-    public List<ordersDTO> getAllOrders() {
-        return ordersService.getAllOrders();
-    }
-
-    // Listar con un filtro
-    @GetMapping("/search/{filter}")
-    public ResponseEntity<Object> search(@PathVariable String filter) {
-        var orders = ordersService.getFilteredOrders(filter);
+    public ResponseEntity<List<ordersDTO>> getAllOrders() {
+        List<ordersDTO> orders = ordersService.getAllOrders();
         return new ResponseEntity<>(orders, HttpStatus.OK);
     }
 
-    // Listar por ID
-    @GetMapping("/{id}")
-    public ResponseEntity<Object> getOrderById(@PathVariable int id) {
-        var order = ordersService.getOrderById(id);
-        return new ResponseEntity<>(order, HttpStatus.OK);
+    // Listar órdenes con un filtro
+    @GetMapping("/search/{filter}")
+    public ResponseEntity<List<ordersDTO>> search(@PathVariable String filter) {
+        List<ordersDTO> orders = ordersService.getFilteredOrders(filter);
+        return new ResponseEntity<>(orders, HttpStatus.OK);
     }
 
+    // Listar una orden por ID
+    @GetMapping("/{id}")
+    public ResponseEntity<Object> getOrderById(@PathVariable int id) {
+        ordersDTO order = ordersService.getOrderById(id);
+        if (order != null) {
+            return new ResponseEntity<>(order, HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(new responseDTO("ERROR", "Orden no encontrada"), HttpStatus.NOT_FOUND);
+        }
+    }
+
+    // Actualizar todos los datos de una orden excepto el ID
+    @PutMapping("/update/{id}")
+    public ResponseEntity<responseDTO> updateOrder(
+            @PathVariable int id,
+            @RequestBody ordersDTO updatedOrder) {
+        responseDTO response = ordersService.updateOrder(id, updatedOrder);
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+
+    // Eliminar una orden físicamente por ID
+    @DeleteMapping("/delete/{id}")
+    public ResponseEntity<responseDTO> deleteOrderById(@PathVariable int id) {
+        responseDTO response = ordersService.deleteOrderById(id);
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+
+    // Eliminar una orden lógicamente (cambiar estado a inactivo)
     @DeleteMapping("/{id}")
     public ResponseEntity<responseDTO> deleteOrder(@PathVariable int id) {
         responseDTO response = ordersService.deleteOrder(id);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
-
-    /*
-     * GET: consultar
-     * POST: crear registros
-     * PUT: actualizar todo
-     * DELETE: eliminar
-     * PATCH: actualizar parcial
-     */
 }
