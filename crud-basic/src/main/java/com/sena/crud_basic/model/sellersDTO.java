@@ -20,20 +20,18 @@ public class sellersDTO {
     @Column(name = "status")
     private int status;
 
+    // Constructor vacío (necesario para JPA)
+    public sellersDTO() {
+    }
+
+    // Constructor completo
     public sellersDTO(int idSeller, String nameSeller, int status) {
         this.idSeller = idSeller;
         this.nameSeller = nameSeller;
         this.status = status;
     }
 
-    public int getStatus() {
-        return status;
-    }
-
-    public void setStatus(int status) {
-        this.status = status;
-    }
-
+    // Getters y setters
     public int getIdSeller() {
         return idSeller;
     }
@@ -48,5 +46,13 @@ public class sellersDTO {
 
     public void setNameSeller(String nameSeller) {
         this.nameSeller = nameSeller;
+    }
+
+    public int getStatus() {
+        return status;
+    }
+
+    public void setStatus(int status) {
+        this.status = status;
     }
 }
