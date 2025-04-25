@@ -21,7 +21,7 @@ public class clientDTO {
     private String phoneClient;
 
     @Column(name = "status")
-    private int status;
+    private int status; 
 
     public clientDTO() {
     }
