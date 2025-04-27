@@ -21,32 +21,47 @@
     </nav>
     <main class="container">
         <h2>Lista de Pedidos</h2>
-        <button class="button">Agregar Pedidos</button>
+        <!-- Botones para interactuar con los pedidos -->
+        <button id="loadPedidosButton" class="button">Cargar Pedidos</button>
+        <button id="addPedidoButton" class="button">Agregar Pedido</button>
         <table>
             <thead>
                 <tr>
                     <th>ID</th>
                     <th>Fecha</th>
-                    <th>Total</th>
                     <th>Clientes</th>
                     <th>Vendedor</th>
                     <th>Acciones</th>
                 </tr>
             </thead>
-            <tbody>
-                <tr>
-                    <td>1</td>
-                    <td>Juan Pérez</td>
-                    <td>1234567890</td>
-                    <td>dd</td>
-                    <td>da</td>
-                    <td>
-                        <button class="button">Editar</button>
-                        <button class="button danger">Eliminar</button>
-                    </td>
-                </tr>
+            <tbody id="pedidosTableBody">
+                <!-- Aquí se cargarán dinámicamente los pedidos -->
             </tbody>
         </table>
     </main>
+
+    <!-- Modal para agregar o editar un pedido -->
+    <div id="pedidoModal" class="modal" style="display: none;">
+        <div class="modal-content">
+            <span id="closeModal" class="close">&times;</span>
+            <h3 id="modalTitle">Agregar Nuevo Pedido</h3>
+            <form id="pedidoForm">
+                <input type="hidden" id="pedidoId" name="pedidoId">
+                <label for="client">Cliente:</label>
+                <input type="text" id="client" name="client" placeholder="Ingrese el cliente" required>
+                <label for="seller">Vendedor:</label>
+                <input type="text" id="seller" name="seller" placeholder="Ingrese el vendedor" required>
+                <label for="dateOrder">Fecha:</label>
+                <input type="date" id="dateOrder" name="dateOrder" required>
+                <div class="form-actions">
+                    <button type="submit" class="button">Guardar</button>
+                    <button type="button" id="cancelPedidoButton" class="button cancel">Cancelar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="js/pedidos.js"></script>
 </body>
 </html>
+``` 

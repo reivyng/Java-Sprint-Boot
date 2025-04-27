@@ -88,20 +88,29 @@ async function createClient(clientData) {
 }
 
 // Función para actualizar un cliente
-async function updateClient( clientData) {
+async function updateClient(clientData) {
     try {
-        const response = await fetch(`${apiUrl}${apiEndpoints.update}{id}`, {
+        // Reemplazar {id} con el ID del cliente
+        const endpoint = apiEndpoints.update.replace('{id}', clientData.idClient);
+
+        const response = await fetch(`${apiUrl}${endpoint}`, {
             method: 'PUT',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(clientData),
         });
+
         if (!response.ok) {
-            throw new Error('Error al actualizar el cliente');
+            const errorMessage = await response.text();
+            throw new Error(`Error al actualizar el cliente: ${errorMessage}`);
         }
+
         console.log('Cliente actualizado exitosamente');
-        fetchActiveClients(); // Actualizar la lista
+        alert('Cliente actualizado exitosamente'); // Mensaje de éxito
+        fetchActiveClients(); // Actualizar la lista de clientes
+        toggleForm(); // Ocultar el formulario
     } catch (error) {
         console.error('Error:', error);
+        alert('No se pudo actualizar el cliente. Inténtalo de nuevo.');
     }
 }
 
@@ -142,11 +151,14 @@ async function deactivateClient(clientId) {
     }
 
     try {
-        // Asegúrate de que esta URL coincida con la ruta del backend
-        const response = await fetch(`${apiUrl}${apiEndpoints.deactivate}${clientId}`, {
-            method: 'PUT',
+        // Reemplazar {id} con el clientId en la URL
+        const endpoint = apiEndpoints.deactivate.replace('{id}', clientId);
+
+        // Realizar la solicitud DELETE
+        const response = await fetch(`${apiUrl}${endpoint}`, {
+            method: 'DELETE',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ status: 0 }), // Cambiar el estado a 0 (inactivo)
+            body: JSON.stringify({ status: 0 }), // Si el backend requiere un cuerpo, envíalo
         });
 
         if (!response.ok) {
@@ -168,21 +180,23 @@ function renderClients(clients) {
     const clientList = document.getElementById('client-list');
     clientList.innerHTML = ''; // Limpiar contenido previo
 
-    clients.forEach(client => {
-        const row = document.createElement('tr');
-        row.innerHTML = `
-            <td>${client.idClient}</td>
-            <td>${client.nameClient}</td>
-            <td>${client.phoneClient}</td>
-            <td>${client.status === 1 ? 'Activo' : 'Inactivo'}</td>
-            <td>
-                <button class="button" onclick="fetchClientById(${client.idClient})">Editar</button>
-                <button class="button danger" onclick="deleteClient(${client.idClient})">Eliminar</button>
-                <button class="button warning" onclick="deactivateClient(${client.idClient})">Desactivar</button>
-            </td>
-        `;
-        clientList.appendChild(row);
-    });
+    clients
+        .filter(client => client.status === 1) // Mostrar solo clientes activos
+        .forEach(client => {
+            const row = document.createElement('tr');
+            row.innerHTML = `
+                <td>${client.idClient}</td>
+                <td>${client.nameClient}</td>
+                <td>${client.phoneClient}</td>
+                <td>${client.status === 1 ? 'Activo' : 'Inactivo'}</td>
+                <td>
+                    <button class="button" onclick="fetchClientById(${client.idClient})">Editar</button>
+                    <button class="button danger" onclick="deleteClient(${client.idClient})">Eliminar</button>
+                    <button class="button warning" onclick="deactivateClient(${client.idClient})">Desactivar</button>
+                </td>
+            `;
+            clientList.appendChild(row);
+        });
 }
 
 // Manejar el envío del formulario

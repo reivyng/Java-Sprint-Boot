@@ -1,8 +1,9 @@
+<!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gestión de Clientes</title>
+    <title>Gestión de Vendedores</title>
     <link rel="stylesheet" href="css/gestion-pedidos.css">
 </head>
 <body>
@@ -21,26 +22,29 @@
     </nav>
     <main class="container">
         <h2>Lista de Vendedores</h2>
-        <button class="button">Agregar Vendedor</button>
+        <button class="button" id="add-seller">Agregar Vendedor</button>
         <table>
             <thead>
                 <tr>
                     <th>ID</th>
                     <th>Nombre</th>
+                    <th>Estado</th>
                     <th>Acciones</th>
                 </tr>
             </thead>
-            <tbody>
-                <tr>
-                    <td>1</td>
-                    <td>Juan Pérez</td>  
-                    <td>
-                        <button class="button">Editar</button>
-                        <button class="button danger">Eliminar</button>
-                    </td>
-                </tr>
+            <tbody id="seller-list">
+                <!-- Los datos de la API se cargarán aquí -->
             </tbody>
         </table>
     </main>
+
+    <form id="seller-form">
+        <input type="hidden" id="seller-id" />
+        <label for="name">Nombre del Vendedor:</label>
+        <input type="text" id="name" placeholder="Ingrese el nombre del vendedor" required />
+        <button type="submit">Guardar</button>
+    </form>
+
+    <script src="js/sellers.js"></script>
 </body>
 </html>
