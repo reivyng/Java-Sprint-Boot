@@ -153,6 +153,35 @@ th {
     background-color: #5a6268;
 }
 
+/* Botones */
+.btn-primary {
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.btn-primary:hover {
+    background-color: #45a049;
+}
+
+.btn-secondary {
+    background-color: #f44336;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.btn-secondary:hover {
+    background-color: #d32f2f;
+}
+
     /* Estilos para el formulario */
     #seller-form {
         max-width: 400px;
@@ -359,26 +388,27 @@ th {
     }
 }
 
-/* Estilos para el modal */
+/* Estilos mejorados para el modal */
 .modal {
-    display: flex;
-    justify-content: center;
-    align-items: center;
+    display: none; /* Oculto por defecto */
     position: fixed;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
-    background-color: rgba(0, 0, 0, 0.5);
+    background-color: rgba(0, 0, 0, 0.6); /* Fondo más oscuro */
     z-index: 1000;
+    justify-content: center;
+    align-items: center;
 }
 
 .modal-content {
     background-color: #fff;
-    padding: 20px;
-    border-radius: 8px;
-    width: 400px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    padding: 30px;
+    border-radius: 12px;
+    width: 450px;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+    position: relative;
     animation: fadeIn 0.3s ease-in-out;
 }
 
@@ -386,7 +416,8 @@ th {
     text-align: center;
     color: #333;
     margin-bottom: 20px;
-    font-size: 1.5rem;
+    font-size: 1.8rem;
+    font-weight: bold;
 }
 
 .modal-content label {
@@ -398,6 +429,98 @@ th {
 
 .modal-content input {
     width: 100%;
+    padding: 12px;
+    margin-bottom: 15px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    font-size: 14px;
+    transition: border-color 0.3s ease;
+}
+
+.modal-content input:focus {
+    border-color: #6a11cb;
+    outline: none;
+    box-shadow: 0 0 6px rgba(106, 17, 203, 0.5);
+}
+
+.modal-content .form-actions {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 20px;
+}
+
+.modal-content .button {
+    width: 48%;
+    padding: 12px;
+    background-color: #2575fc;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.modal-content .button:hover {
+    background-color: #6a11cb;
+}
+
+.modal-content .button.cancel {
+    background-color: #dc3545;
+}
+
+.modal-content .button.cancel:hover {
+    background-color: #c82333;
+}
+
+.modal-content .close {
+    position: absolute;
+    top: 10px;
+    right: 15px;
+    font-size: 1.5rem;
+    color: #333;
+    cursor: pointer;
+    transition: color 0.3s ease;
+}
+
+.modal-content .close:hover {
+    color: #6a11cb;
+}
+
+/* Animación para el modal */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: scale(0.9);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+/* Estilos para el formulario de creación */
+#orderProductForm {
+    display: none; /* Oculto por defecto */
+    background-color: #fff;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 20px;
+    max-width: 400px;
+    margin: 20px auto;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    animation: fadeIn 0.3s ease-in-out;
+}
+
+#orderProductForm label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: bold;
+    color: #333;
+}
+
+#orderProductForm input {
+    width: 100%;
     padding: 10px;
     margin-bottom: 15px;
     border: 1px solid #ccc;
@@ -405,31 +528,38 @@ th {
     font-size: 14px;
 }
 
-.modal-content input:focus {
+#orderProductForm input:focus {
     border-color: #6a11cb;
     outline: none;
     box-shadow: 0 0 4px rgba(106, 17, 203, 0.5);
 }
 
-.modal-content .form-actions {
-    display: flex;
-    justify-content: space-between;
-}
-
-.modal-content .button {
-    padding: 10px 20px;
+#orderProductForm .button {
+    width: 100%;
+    padding: 10px;
+    background-color: #2575fc;
+    color: white;
     border: none;
     border-radius: 4px;
-    font-size: 14px;
+    font-size: 16px;
     cursor: pointer;
     transition: background-color 0.3s ease;
 }
 
-.modal-content .button.cancel {
+#orderProductForm .button:hover {
+    background-color: #6a11cb;
+}
+
+#orderProductForm .form-actions {
+    display: flex;
+    justify-content: space-between;
+}
+
+#orderProductForm .button.cancel {
     background-color: #dc3545;
     color: white;
 }
 
-.modal-content .button.cancel:hover {
+#orderProductForm .button.cancel:hover {
     background-color: #c82333;
 }

@@ -38,13 +38,29 @@
         </table>
     </main>
 
-    <form id="seller-form">
-        <input type="hidden" id="seller-id" />
-        <label for="name">Nombre del Vendedor:</label>
-        <input type="text" id="name" placeholder="Ingrese el nombre del vendedor" required />
-        <button type="submit">Guardar</button>
-    </form>
+    <!-- Modal para agregar/editar vendedor -->
+    <div id="add-seller-modal" class="modal" style="display: none;">
+        <div class="modal-content">
+            <span class="close" onclick="toggleForm()">&times;</span>
+            <h3>Agregar/Editar Vendedor</h3>
+            <form id="seller-form" class="form">
+                <input type="hidden" id="seller-id" name="seller-id">
+                <div class="form-group">
+                    <label for="name">Nombre del Vendedor:</label>
+                    <input type="text" id="name" name="name" placeholder="Ingrese el nombre del vendedor" required>
+                </div>
+                <div class="form-actions">
+                    <button type="submit" class="btn btn-primary">Guardar</button>
+                    <button type="button" class="btn btn-secondary" onclick="toggleForm()">Cancelar</button>
+                </div>
+            </form>
+        </div>
+    </div>
 
     <script src="js/sellers.js"></script>
+    <script>
+        // Mostrar el modal al hacer clic en "Agregar Vendedor"
+        document.getElementById('add-seller').addEventListener('click', toggleForm);
+    </script>
 </body>
 </html>

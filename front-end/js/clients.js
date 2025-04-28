@@ -199,6 +199,20 @@ function renderClients(clients) {
         });
 }
 
+// Función para mostrar u ocultar el formulario
+function toggleForm() {
+    const modal = document.getElementById('add-client-modal');
+    modal.style.display = modal.style.display === 'none' || modal.style.display === '' ? 'flex' : 'none';
+}
+
+// Cerrar el modal al hacer clic fuera de él
+window.onclick = function (event) {
+    const modal = document.getElementById('add-client-modal');
+    if (event.target === modal) {
+        modal.style.display = 'none';
+    }
+};
+
 // Manejar el envío del formulario
 document.getElementById('client-form').addEventListener('submit', function (event) {
     event.preventDefault(); // Evitar el envío del formulario por defecto

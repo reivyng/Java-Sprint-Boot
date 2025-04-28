@@ -174,9 +174,17 @@ async function fetchSellerById(sellerId) {
 
 // Mostrar/ocultar el formulario
 function toggleForm() {
-    const form = document.getElementById('seller-form'); // Cambiar a 'seller-form'
-    form.style.display = form.style.display === 'none' ? 'block' : 'none';
+    const modal = document.getElementById('add-seller-modal');
+    modal.style.display = modal.style.display === 'none' || modal.style.display === '' ? 'flex' : 'none';
 }
+
+// Cerrar el modal al hacer clic fuera de él
+window.onclick = function (event) {
+    const modal = document.getElementById('add-seller-modal');
+    if (event.target === modal) {
+        modal.style.display = 'none';
+    }
+};
 
 // Manejar el envío del formulario
 document.getElementById('seller-form').addEventListener('submit', function (event) {

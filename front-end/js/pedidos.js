@@ -298,6 +298,20 @@ async function handleDeactivatePedido(event) {
     }
 }
 
+// Alternar la visibilidad del modal
+function togglePedidoModal() {
+    const modal = document.getElementById('pedidoModal');
+    modal.style.display = modal.style.display === 'none' || modal.style.display === '' ? 'flex' : 'none';
+}
+
+// Cerrar el modal al hacer clic fuera de él
+window.onclick = function (event) {
+    const modal = document.getElementById('pedidoModal');
+    if (event.target === modal) {
+        modal.style.display = 'none';
+    }
+};
+
 // Asignar eventos a los botones al cargar la página
 window.onload = () => {
     document.getElementById('loadPedidosButton').addEventListener('click', loadPedidos);

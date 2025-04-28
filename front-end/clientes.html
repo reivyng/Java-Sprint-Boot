@@ -38,31 +38,34 @@
         </table>
     </main>
 
-    <!-- Formulario para agregar un nuevo cliente -->
-    <div id="add-client-form" class="form-container" style="display: none;">
-        <h3>Agregar Nuevo Cliente</h3>
-        <form id="client-form" class="form">
-            <input type="hidden" id="client-id" name="client-id">
-            <div class="form-group">
-                <label for="name">Nombre:</label>
-                <input type="text" id="name" name="name" placeholder="Ingrese el nombre" required>
-            </div>
-            <div class="form-group">
-                <label for="phone">Teléfono:</label>
-                <input type="text" id="phone" name="phone" placeholder="Ingrese el teléfono" required>
-            </div>
-            <div class="form-actions">
-                <button type="submit" class="btn btn-primary">Guardar</button>
-                <button type="button" class="btn btn-secondary" onclick="toggleForm()">Cancelar</button>
-            </div>
-        </form>
+    <!-- Modal para agregar/editar cliente -->
+    <div id="add-client-modal" class="modal" style="display: none;">
+        <div class="modal-content">
+            <span class="close" onclick="toggleForm()">&times;</span>
+            <h3>Agregar/Editar Cliente</h3>
+            <form id="client-form" class="form">
+                <input type="hidden" id="client-id" name="client-id">
+                <div class="form-group">
+                    <label for="name">Nombre:</label>
+                    <input type="text" id="name" name="name" placeholder="Ingrese el nombre" required>
+                </div>
+                <div class="form-group">
+                    <label for="phone">Teléfono:</label>
+                    <input type="text" id="phone" name="phone" placeholder="Ingrese el teléfono" required>
+                </div>
+                <div class="form-actions">
+                    <button type="submit" class="btn btn-primary">Guardar</button>
+                    <button type="button" class="btn btn-secondary" onclick="toggleForm()">Cancelar</button>
+                </div>
+            </form>
+        </div>
     </div>
 
     <script src="js/clients.js"></script>
     <script>
         // Mostrar/ocultar el formulario
         function toggleForm() {
-            const form = document.getElementById('add-client-form');
+            const form = document.getElementById('add-client-modal');
             form.style.display = form.style.display === 'none' ? 'block' : 'none';
         }
 
