@@ -3,7 +3,9 @@ const apiUrl = 'http://localhost:8080/api/v1/orderProducts';
 
 const apiEndpoints = {
     fetchAll: '/obtener/',
-    search: '/', // Cambiado para que solo necesite el ID directamente
+    search: '/', 
+    filter: '/search/{filter}',
+    getById: '/{id}',
     create: '/enviar/',
     update: '/update/',
     delete: '/delete/', // Eliminar un cliente físicamente
@@ -40,6 +42,34 @@ async function searchOrderProduct(id) {
     } catch (error) {
         console.error('Error al buscar el detalle de pedido:', error);
         throw error;
+    }
+}
+
+// Función para buscar detalles de pedidos por filtro (ID o Nombre del Producto)
+async function searchOrderProducts(filter, searchType) {
+    try {
+        let endpoint;
+
+        if (searchType === 'id') {
+            // Buscar por ID
+            endpoint = apiEndpoints.getById.replace('{id}', filter);
+        } else if (searchType === 'product') {
+            // Buscar por Nombre del Producto
+            endpoint = apiEndpoints.filter.replace('{filter}', encodeURIComponent(filter));
+        } else {
+            throw new Error('Tipo de búsqueda no válido');
+        }
+
+        const response = await fetch(`${apiUrl}${endpoint}`);
+        if (!response.ok) {
+            throw new Error('Error al buscar detalles de pedidos');
+        }
+
+        const orderProducts = searchType === 'id' ? [await response.json()] : await response.json();
+        renderOrderProducts(orderProducts); // Renderizar los detalles de pedidos encontrados
+    } catch (error) {
+        console.error('Error:', error);
+        alert('No se pudo realizar la búsqueda. Inténtalo de nuevo.');
     }
 }
 
@@ -128,30 +158,35 @@ async function deactivateOrderProductHandler(id) {
     }
 }
 
+// Función para renderizar los detalles de pedidos en la tabla
+function renderOrderProducts(orderProducts) {
+    const tbody = document.querySelector('tbody');
+    tbody.innerHTML = ''; // Limpiar contenido previo
+
+    orderProducts.forEach(orderProduct => {
+        const row = document.createElement('tr');
+        row.innerHTML = `
+            <td>${orderProduct.idOrderProduct}</td>
+            <td>${orderProduct.order.client.nameClient}</td>
+            <td>${orderProduct.product.nameProduct}</td>
+            <td>${orderProduct.quantity}</td>
+            <td>${orderProduct.price}</td>
+            <td>${orderProduct.total}</td>
+            <td>
+                <button class="button" onclick="editOrderProduct(${orderProduct.idOrderProduct})">Editar</button>
+                <button class="button danger" onclick="deleteOrderProductHandler(${orderProduct.idOrderProduct})">Eliminar</button>
+                <button class="button warning" onclick="deactivateOrderProductHandler(${orderProduct.idOrderProduct})">Desactivar</button>
+            </td>
+        `;
+        tbody.appendChild(row);
+    });
+}
+
 // Función para cargar todos los detalles de pedidos en la tabla
 async function loadOrderProducts() {
     try {
         const orderProducts = await fetchAllOrderProducts();
-        const tbody = document.querySelector('tbody');
-        tbody.innerHTML = ''; // Limpiar la tabla antes de cargar los datos
-
-        orderProducts.forEach(orderProduct => {
-            const row = document.createElement('tr');
-            row.innerHTML = `
-                <td>${orderProduct.idOrderProduct}</td>
-                <td>${orderProduct.order.client.nameClient}</td> <!-- Solo el nombre del cliente -->
-                <td>${orderProduct.product.nameProduct}</td>
-                <td>${orderProduct.quantity}</td>
-                <td>${orderProduct.price}</td>
-                <td>${orderProduct.total}</td>
-                <td>
-                    <button class="button" onclick="editOrderProduct(${orderProduct.idOrderProduct})">Editar</button>
-                    <button class="button danger" onclick="deleteOrderProductHandler(${orderProduct.idOrderProduct})">Eliminar</button>
-                    <button class="button warning" onclick="deactivateOrderProductHandler(${orderProduct.idOrderProduct})">Desactivar</button>
-                </td>
-            `;
-            tbody.appendChild(row);
-        });
+        renderOrderProducts(orderProducts);
     } catch (error) {
         console.error('Error al cargar los detalles de pedidos:', error);
     }
@@ -281,6 +316,22 @@ function hideCreateForm() {
     form.style.display = 'none'; // Ocultar el formulario
     form.reset(); // Limpiar los campos del formulario
 }
+
+// Manejar el evento de búsqueda
+document.getElementById('search-form').addEventListener('submit', function (event) {
+    event.preventDefault(); // Evitar el envío del formulario por defecto
+
+    const searchType = document.getElementById('search-type').value; // Obtener el tipo de búsqueda
+    const filter = document.getElementById('search-input').value.trim(); // Obtener el valor ingresado
+
+    if (!filter) {
+        alert('Por favor, ingresa un término de búsqueda.');
+        return;
+    }
+
+    // Llamar a la función de búsqueda con el filtro y el tipo de búsqueda
+    searchOrderProducts(filter, searchType);
+});
 
 // Cargar los detalles de pedidos al cargar la página
 document.addEventListener('DOMContentLoaded', loadOrderProducts);

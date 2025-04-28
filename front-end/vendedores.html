@@ -8,7 +8,7 @@
 </head>
 <body>
     <header>
-        <h1>Gestión de Vendedores</h1>
+        <h1 class="titulo">Gestión de Vendedores</h1>
     </header>
     <nav>
         <ul>
@@ -23,6 +23,16 @@
     <main class="container">
         <h2>Lista de Vendedores</h2>
         <button class="button" id="add-seller">Agregar Vendedor</button>
+        <!-- Formulario de búsqueda con opciones -->
+        <form id="search-form" class="search-form">
+            <select id="search-type">
+                <option value="id">ID</option>
+                <option value="name">Nombre</option>
+            </select>
+            <input type="text" id="search-input" placeholder="Buscar..." />
+            <button type="submit">🔍</button>
+        </form>
+
         <table>
             <thead>
                 <tr>

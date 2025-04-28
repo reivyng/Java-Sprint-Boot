@@ -7,7 +7,7 @@
 </head>
 <body>
     <header>
-        <h1>Gestión de Pedidos</h1>
+        <h1 class="titulo">Gestión de Pedidos</h1>
     </header>
     <nav>
         <ul>
@@ -21,6 +21,16 @@
     </nav>
     <main class="container">
         <h2>Lista de Pedidos</h2>
+        <!-- Formulario de búsqueda con opciones -->
+        <form id="search-form" class="search-form">
+            <select id="search-type">
+                <option value="id">ID</option>
+                <option value="client">Nombre del Cliente</option>
+                <option value="seller">Nombre del Vendedor</option>
+            </select>
+            <input type="text" id="search-input" placeholder="Buscar..." />
+            <button type="submit">🔍</button>
+        </form>
         <!-- Botones para interactuar con los pedidos -->
         <button id="loadPedidosButton" class="button">Cargar Pedidos</button>
         <button id="addPedidoButton" class="button">Agregar Pedido</button>

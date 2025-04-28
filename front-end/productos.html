@@ -8,7 +8,7 @@
 </head>
 <body>
     <header>
-        <h1>Gestión de Productos</h1>
+        <h1 class="titulo">Gestión de Productos</h1>
     </header>
     <nav>
         <ul>
@@ -22,6 +22,16 @@
     </nav>
     <main class="container">
         <h2>Lista de Productos</h2>
+        <!-- Formulario de búsqueda con opciones -->
+        <form id="search-form" class="search-form">
+            <select id="search-type">
+                <option value="id">ID</option>
+                <option value="name">Nombre</option>
+                <option value="price">Precio</option>
+            </select>
+            <input type="text" id="search-input" placeholder="Buscar..." />
+            <button type="submit">🔍</button>
+        </form>
         <button class="button" id="add-product">Agregar Producto</button>
         <table>
             <thead>

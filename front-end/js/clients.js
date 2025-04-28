@@ -5,6 +5,7 @@ const apiEndpoints = {
     fetchAll: '/obtener/',
     search: '/search/',
     filter: '/search/{filter}',
+    getById: '/{id}',
     create: '/enviar/',
     update: '/update/{id}',
     delete: '/delete/{id}', // Eliminar un cliente físicamente
@@ -26,37 +27,42 @@ async function fetchActiveClients() {
 }
 
 // Función para buscar clientes por filtro (nombre o teléfono)
-async function searchClients() {
+async function searchClients(filter) {
     try {
-        const response = await fetch(`${apiUrl}${apiEndpoints.search}{filter}`);
+        // Reemplazar {filter} con el valor del filtro proporcionado
+        const endpoint = apiEndpoints.filter.replace('{filter}', encodeURIComponent(filter));
+
+        const response = await fetch(`${apiUrl}${endpoint}`);
         if (!response.ok) {
             throw new Error('Error al buscar clientes');
         }
+
         const clients = await response.json();
-        renderClients(clients);
+        renderClients(clients); // Renderizar los clientes encontrados
     } catch (error) {
         console.error('Error:', error);
+        alert('No se pudo realizar la búsqueda. Inténtalo de nuevo.');
     }
 }
 
-// Función para obtener un cliente por ID
+// Función para obtener un cliente por ID y mostrarlo en la tabla
 async function fetchClientById(clientId) {
     try {
-        const response = await fetch(`${apiUrl}/${clientId}`);
+        // Reemplazar {id} con el clientId en el endpoint
+        const endpoint = apiEndpoints.getById.replace('{id}', clientId);
+
+        const response = await fetch(`${apiUrl}${endpoint}`);
         if (!response.ok) {
             throw new Error('Error al obtener el cliente');
         }
+
         const client = await response.json();
 
-        // Cargar los datos en el formulario
-        document.getElementById('client-id').value = client.idClient;
-        document.getElementById('name').value = client.nameClient;
-        document.getElementById('phone').value = client.phoneClient;
-
-        // Mostrar el formulario
-        toggleForm();
+        // Renderizar el cliente en la tabla
+        renderClients([client]); // Pasar el cliente como un array para reutilizar la función
     } catch (error) {
         console.error('Error:', error);
+        alert('No se pudo obtener el cliente. Inténtalo de nuevo.');
     }
 }
 
@@ -206,22 +212,20 @@ function renderClients(clients) {
     const clientList = document.getElementById('client-list');
     clientList.innerHTML = ''; // Limpiar contenido previo
 
-    clients
-        .filter(client => client.status === 1) // Mostrar solo clientes activos
-        .forEach(client => {
-            const row = document.createElement('tr');
-            row.innerHTML = `
-                <td>${client.idClient}</td>
-                <td>${client.nameClient}</td>
-                <td>${client.phoneClient}</td>
-                <td>
-                    <button class="button" onclick="fetchClientById(${client.idClient})">Editar</button>
-                    <button class="button danger" onclick="deleteClient(${client.idClient})">Eliminar</button>
-                    <button class="button warning" onclick="deactivateClient(${client.idClient})">Desactivar</button>
-                </td>
-            `;
-            clientList.appendChild(row);
-        });
+    clients.forEach(client => {
+        const row = document.createElement('tr');
+        row.innerHTML = `
+            <td>${client.idClient}</td>
+            <td>${client.nameClient}</td>
+            <td>${client.phoneClient}</td>
+            <td>
+                <button class="button" onclick="fetchClientById(${client.idClient})">Editar</button>
+                <button class="button danger" onclick="deleteClient(${client.idClient})">Eliminar</button>
+                <button class="button warning" onclick="deactivateClient(${client.idClient})">Desactivar</button>
+            </td>
+        `;
+        clientList.appendChild(row);
+    });
 }
 
 // Función para mostrar u ocultar el formulario
@@ -255,6 +259,26 @@ document.getElementById('client-form').addEventListener('submit', function (even
     };
 
     createClient(clientData);
+});
+
+// Manejar el evento de búsqueda
+document.getElementById('search-form').addEventListener('submit', function (event) {
+    event.preventDefault(); // Evitar el envío del formulario por defecto
+
+    const searchType = document.getElementById('search-type').value; // Obtener el tipo de búsqueda
+    const filter = document.getElementById('search-input').value.trim(); // Obtener el valor ingresado
+
+    if (!filter) {
+        alert('Por favor, ingresa un término de búsqueda.');
+        return;
+    }
+
+    // Llamar al método correspondiente según el tipo de búsqueda
+    if (searchType === 'id') {
+        fetchClientById(filter); // Buscar por ID
+    } else if (searchType === 'name' || searchType === 'phone') {
+        searchClients(filter); // Buscar por nombre o teléfono
+    }
 });
 
 // Llamar a la función al cargar la página

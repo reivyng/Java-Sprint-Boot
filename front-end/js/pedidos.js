@@ -4,6 +4,8 @@ const apiUrl = 'http://localhost:8080/api/v1/orders';
 const apiEndpoints = {
     fetchAll: '/obtener/',
     search: '/search/',
+    filter: '/search/{filter}',
+    getById: '/{id}',
     create: '/enviar/',
     update: '/update/{id}',
     delete: '/delete/{id}', // Eliminar un cliente físicamente
@@ -132,6 +134,31 @@ async function deactivateClient(id) {
     }
 }
 
+// Función para renderizar los pedidos en la tabla
+function renderPedidos(pedidos) {
+    const pedidosTableBody = document.getElementById('pedidosTableBody');
+    pedidosTableBody.innerHTML = ''; // Limpiar contenido previo
+
+    pedidos.forEach(pedido => {
+        const clientName = pedido.client?.nameClient || 'N/A';
+        const sellerName = pedido.seller?.nameSeller || 'N/A';
+
+        const row = document.createElement('tr');
+        row.innerHTML = `
+            <td>${pedido.idOrders || 'N/A'}</td>
+            <td>${pedido.dateOrder || 'N/A'}</td>
+            <td>${clientName}</td>
+            <td>${sellerName}</td>
+            <td>
+                <button class="button" data-id="${pedido.idOrders}" onclick="handleEditPedido(event)">Editar</button>
+                <button class="button danger" data-id="${pedido.idOrders}" onclick="handleDeletePedido(event)">Eliminar</button>
+                <button class="button warning" data-id="${pedido.idOrders}" onclick="handleDeactivatePedido(event)">Desactivar</button>
+            </td>
+        `;
+        pedidosTableBody.appendChild(row);
+    });
+}
+
 // Obtener todos los pedidos y renderizarlos en la tabla
 async function loadPedidos() {
     const pedidosTableBody = document.getElementById('pedidosTableBody');
@@ -149,24 +176,7 @@ async function loadPedidos() {
             throw new Error('La respuesta de la API no es un array.');
         }
 
-        pedidos.forEach(pedido => {
-            const clientName = pedido.client?.nameClient || 'N/A';
-            const sellerName = pedido.seller?.nameSeller || 'N/A';
-
-            const row = document.createElement('tr');
-            row.innerHTML = `
-                <td>${pedido.idOrders || 'N/A'}</td>
-                <td>${pedido.dateOrder || 'N/A'}</td>
-                <td>${clientName}</td>
-                <td>${sellerName}</td>
-                <td>
-                    <button class="button" data-id="${pedido.idOrders}" onclick="handleEditPedido(event)">Editar</button>
-                    <button class="button danger" data-id="${pedido.idOrders}" onclick="handleDeletePedido(event)">Eliminar</button>
-                    <button class="button warning" data-id="${pedido.idOrders}" onclick="handleDeactivatePedido(event)">Desactivar</button>
-                </td>
-            `;
-            pedidosTableBody.appendChild(row);
-        });
+        renderPedidos(pedidos);
     } catch (error) {
         console.error('Error al cargar los pedidos:', error.message);
     }
@@ -297,6 +307,50 @@ async function handleDeactivatePedido(event) {
         console.error('Error al desactivar el pedido:', error);
     }
 }
+
+// Función para buscar pedidos por filtro (ID, Nombre del Cliente o Nombre del Vendedor)
+async function searchPedidos(filter, searchType) {
+    try {
+        let endpoint;
+
+        if (searchType === 'id') {
+            // Buscar por ID
+            endpoint = apiEndpoints.getById.replace('{id}', filter);
+        } else if (searchType === 'client' || searchType === 'seller') {
+            // Buscar por Nombre del Cliente o Nombre del Vendedor
+            endpoint = apiEndpoints.filter.replace('{filter}', encodeURIComponent(filter));
+        } else {
+            throw new Error('Tipo de búsqueda no válido');
+        }
+
+        const response = await fetch(`${apiUrl}${endpoint}`);
+        if (!response.ok) {
+            throw new Error('Error al buscar pedidos');
+        }
+
+        const pedidos = searchType === 'id' ? [await response.json()] : await response.json();
+        renderPedidos(pedidos); // Renderizar los pedidos encontrados
+    } catch (error) {
+        console.error('Error:', error);
+        alert('No se pudo realizar la búsqueda. Inténtalo de nuevo.');
+    }
+}
+
+// Manejar el evento de búsqueda
+document.getElementById('search-form').addEventListener('submit', function (event) {
+    event.preventDefault(); // Evitar el envío del formulario por defecto
+
+    const searchType = document.getElementById('search-type').value; // Obtener el tipo de búsqueda
+    const filter = document.getElementById('search-input').value.trim(); // Obtener el valor ingresado
+
+    if (!filter) {
+        alert('Por favor, ingresa un término de búsqueda.');
+        return;
+    }
+
+    // Llamar a la función de búsqueda con el filtro y el tipo de búsqueda
+    searchPedidos(filter, searchType);
+});
 
 // Alternar la visibilidad del modal
 function togglePedidoModal() {

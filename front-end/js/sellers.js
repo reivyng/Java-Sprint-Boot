@@ -3,6 +3,8 @@ const apiUrl = 'http://localhost:8080/api/v1/sellers';
 const apiEndpoints = {
     fetchAll: '/obtener/',
     create: '/enviar/',
+    filter: '/search/{filter}',
+    getById: '/{id}',
     update: '/update/{id}',
     delete: '/delete/{id}', // Eliminación física
     deactivate: '/{id}' // Eliminación lógica
@@ -145,6 +147,34 @@ async function deactivateSeller(sellerId) {
     }
 }
 
+// Función para buscar vendedores por filtro (ID o Nombre)
+async function searchSellers(filter, searchType) {
+    try {
+        let endpoint;
+
+        if (searchType === 'id') {
+            // Buscar por ID
+            endpoint = apiEndpoints.getById.replace('{id}', filter);
+        } else if (searchType === 'name') {
+            // Buscar por Nombre
+            endpoint = apiEndpoints.filter.replace('{filter}', encodeURIComponent(filter));
+        } else {
+            throw new Error('Tipo de búsqueda no válido');
+        }
+
+        const response = await fetch(`${apiUrl}${endpoint}`);
+        if (!response.ok) {
+            throw new Error('Error al buscar vendedores');
+        }
+
+        const sellers = searchType === 'id' ? [await response.json()] : await response.json();
+        renderSellers(sellers); // Renderizar los vendedores encontrados
+    } catch (error) {
+        console.error('Error:', error);
+        alert('No se pudo realizar la búsqueda. Inténtalo de nuevo.');
+    }
+}
+
 // Función para renderizar los vendedores en la tabla
 function renderSellers(sellers) {
     const sellerList = document.getElementById('seller-list');
@@ -227,6 +257,22 @@ document.getElementById('seller-form').addEventListener('submit', function (even
     } else {
         createSeller(sellerData);
     }
+});
+
+// Manejar el evento de búsqueda
+document.getElementById('search-form').addEventListener('submit', function (event) {
+    event.preventDefault(); // Evitar el envío del formulario por defecto
+
+    const searchType = document.getElementById('search-type').value; // Obtener el tipo de búsqueda
+    const filter = document.getElementById('search-input').value.trim(); // Obtener el valor ingresado
+
+    if (!filter) {
+        alert('Por favor, ingresa un término de búsqueda.');
+        return;
+    }
+
+    // Llamar a la función de búsqueda con el filtro y el tipo de búsqueda
+    searchSellers(filter, searchType);
 });
 
 // Cargar la lista de vendedores al cargar la página

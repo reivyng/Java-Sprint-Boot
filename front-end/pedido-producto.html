@@ -7,7 +7,7 @@
 </head>
 <body>
     <header>
-        <h1>Detalles del pedido</h1>
+        <h1 class="titulo">Detalles del pedido</h1>
     </header>
     <nav>
         <ul>
@@ -21,6 +21,16 @@
     </nav>
     <main class="container">
         <h2>Detalles del pedido</h2>
+        <!-- Formulario de búsqueda con opciones -->
+        <form id="search-form" class="search-form">
+            <select id="search-type">
+                <option value="id">ID</option>
+                <option value="product">Nombre del Producto</option>
+            </select>
+            <input type="text" id="search-input" placeholder="Buscar..." />
+            <button type="submit">🔍</button>
+        </form>
+
         <!-- Botón para agregar un nuevo detalle de pedido -->
         <button class="button" onclick="showCreateForm()">Agregar Detalle de Pedido</button>
         

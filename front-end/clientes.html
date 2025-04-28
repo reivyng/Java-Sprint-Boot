@@ -7,7 +7,7 @@
 </head>
 <body>
     <header>
-        <h1>Gestión de Clientes</h1>
+        <h1 class="titulo">Gestión de Clientes</h1>
     </header>
     <nav>
         <ul>
@@ -21,7 +21,21 @@
     </nav>
     <main class="container">
         <h2>Lista de Clientes</h2>
+        <!-- Formulario de búsqueda con opciones -->
+        <form id="search-form" class="search-form">
+            <select id="search-type">
+                <option value="id">ID</option>
+                <option value="name">Nombre</option>
+                <option value="phone">Teléfono</option>
+            </select>
+            <input type="text" id="search-input" placeholder="Buscar..." />
+            <button type="submit">🔍</button>
+        </form>
+
+        <!-- Botón para agregar cliente -->
         <button class="button" id="add-client">Agregar Cliente</button>
+
+        <!-- Tabla de clientes -->
         <table>
             <thead>
                 <tr>
