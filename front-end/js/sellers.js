@@ -22,13 +22,24 @@ async function fetchSellers() {
     }
 }
 
+// Validar los campos del formulario antes de enviar
+function validateForm(sellerData) {
+    if (!sellerData.nameSeller || sellerData.nameSeller.trim() === '') {
+        alert('El nombre del vendedor es obligatorio.');
+        return false;
+    }
+    return true;
+}
+
 // Función para registrar un nuevo vendedor
 async function createSeller(sellerData) {
     try {
-        // Asegurarse de que el estado sea activo por defecto
+        if (!validateForm(sellerData)) {
+            return;
+        }
+
         sellerData.status = 1; // Activo por defecto
 
-        console.log('Llamando a createSeller con datos:', sellerData); // Depuración
         const response = await fetch(`${apiUrl}${apiEndpoints.create}`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
@@ -52,8 +63,11 @@ async function createSeller(sellerData) {
 // Función para actualizar un vendedor
 async function updateSeller(sellerData) {
     try {
-        // Asegurarse de que el estado sea activo por defecto al editar
-        sellerData.status = 1; // Activo por defecto
+        if (!validateForm(sellerData)) {
+            return;
+        }
+
+        sellerData.status = 1; // Activo por defecto al editar
 
         const endpoint = apiEndpoints.update.replace('{id}', sellerData.idSeller);
 
@@ -141,7 +155,6 @@ function renderSellers(sellers) {
         row.innerHTML = `
             <td>${seller.idSeller}</td>
             <td>${seller.nameSeller}</td>
-            <td>${seller.status === 1 ? 'Activo' : 'Inactivo'}</td>
             <td>
                 <button class="button" onclick="fetchSellerById(${seller.idSeller})">Editar</button>
                 <button class="button danger" onclick="deleteSeller(${seller.idSeller})">Eliminar</button>
@@ -161,6 +174,11 @@ async function fetchSellerById(sellerId) {
         }
         const seller = await response.json();
 
+        // Validar que los datos del vendedor sean correctos
+        if (!seller || !seller.idSeller || !seller.nameSeller) {
+            throw new Error('Datos del vendedor inválidos');
+        }
+
         // Cargar los datos en el formulario
         document.getElementById('seller-id').value = seller.idSeller;
         document.getElementById('name').value = seller.nameSeller;
@@ -169,6 +187,7 @@ async function fetchSellerById(sellerId) {
         toggleForm();
     } catch (error) {
         console.error('Error:', error);
+        alert('No se pudo cargar los datos del vendedor. Por favor, inténtalo de nuevo.');
     }
 }
 
@@ -186,16 +205,21 @@ window.onclick = function (event) {
     }
 };
 
-// Manejar el envío del formulario
+// Manejar el envío del formulario con validaciones
 document.getElementById('seller-form').addEventListener('submit', function (event) {
     event.preventDefault();
 
     const sellerId = document.getElementById('seller-id').value;
-    const name = document.getElementById('name').value;
+    const name = document.getElementById('name').value.trim();
 
     const sellerData = {
         nameSeller: name,
     };
+
+    // Validar los datos del formulario
+    if (!validateForm(sellerData)) {
+        return;
+    }
 
     if (sellerId) {
         sellerData.idSeller = sellerId;

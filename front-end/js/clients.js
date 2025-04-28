@@ -4,6 +4,7 @@ const apiUrl = 'http://localhost:8080/api/v1/clients';
 const apiEndpoints = {
     fetchAll: '/obtener/',
     search: '/search/',
+    filter: '/search/{filter}',
     create: '/enviar/',
     update: '/update/{id}',
     delete: '/delete/{id}', // Eliminar un cliente físicamente
@@ -59,11 +60,35 @@ async function fetchClientById(clientId) {
     }
 }
 
+// Validar entrada del formulario
+function validateClientForm(name, phone) {
+    // Verificar que los campos no estén vacíos
+    if (!name.trim() || !phone.trim()) {
+        alert('Todos los campos son obligatorios.');
+        return false;
+    }
+
+    // Validar que el teléfono contenga solo números y tenga una longitud mínima
+    const phoneRegex = /^[0-9]{7,15}$/; // Solo números, entre 7 y 15 dígitos
+    if (!phoneRegex.test(phone)) {
+        alert('El número de teléfono debe contener solo números y tener entre 7 y 15 dígitos.');
+        return false;
+    }
+
+    // Escapar caracteres especiales para evitar XSS
+    const escapedName = name.replace(/</g, "&lt;").replace(/>/g, "&gt;");
+    const escapedPhone = phone.replace(/</g, "&lt;").replace(/>/g, "&gt;");
+
+    return { name: escapedName, phone: escapedPhone };
+}
+
 // Función para registrar un nuevo cliente
 async function createClient(clientData) {
-    try {
-        console.log('Datos enviados:', clientData); // Depuración
+    // Validar los datos antes de enviarlos al servidor
+    const validatedData = validateClientForm(clientData.nameClient, clientData.phoneClient);
+    if (!validatedData) return; // Detener si los datos no son válidos
 
+    try {
         const response = await fetch(`${apiUrl}${apiEndpoints.create}`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
@@ -76,21 +101,23 @@ async function createClient(clientData) {
             throw new Error(`Error al registrar el cliente: ${errorMessage}`);
         }
 
-        // Si la respuesta es exitosa
-        console.log('Cliente registrado exitosamente');
-        alert('Cliente registrado exitosamente'); // Mensaje de éxito
+        // Si la respuesta es exitosa, mostrar mensaje de éxito
+        alert('Cliente registrado exitosamente');
         fetchActiveClients(); // Actualizar la lista de clientes
-        toggleForm(); // Ocultar el formulario
+        toggleForm(); // Cerrar el formulario
     } catch (error) {
-        // Este bloque solo se ejecutará si ocurre un error real
+        // Mostrar mensaje de error solo si ocurre un problema real
         console.error('Error:', error);
     }
 }
 
 // Función para actualizar un cliente
 async function updateClient(clientData) {
+    // Validar los datos antes de enviarlos al servidor
+    const validatedData = validateClientForm(clientData.nameClient, clientData.phoneClient);
+    if (!validatedData) return; // Detener si los datos no son válidos
+
     try {
-        // Reemplazar {id} con el ID del cliente
         const endpoint = apiEndpoints.update.replace('{id}', clientData.idClient);
 
         const response = await fetch(`${apiUrl}${endpoint}`, {
@@ -104,17 +131,16 @@ async function updateClient(clientData) {
             throw new Error(`Error al actualizar el cliente: ${errorMessage}`);
         }
 
-        console.log('Cliente actualizado exitosamente');
-        alert('Cliente actualizado exitosamente'); // Mensaje de éxito
-        fetchActiveClients(); // Actualizar la lista de clientes
-        toggleForm(); // Ocultar el formulario
+        alert('Cliente actualizado exitosamente');
+        fetchActiveClients();
+        toggleForm();
     } catch (error) {
         console.error('Error:', error);
         alert('No se pudo actualizar el cliente. Inténtalo de nuevo.');
     }
 }
 
-// Función para eliminar un cliente físicamente (eliminación persistente)
+// Confirmar acciones críticas
 async function deleteClient(clientId) {
     const confirmDelete = confirm('¿Estás seguro de que deseas eliminar este cliente de forma permanente?');
     if (!confirmDelete) {
@@ -188,7 +214,6 @@ function renderClients(clients) {
                 <td>${client.idClient}</td>
                 <td>${client.nameClient}</td>
                 <td>${client.phoneClient}</td>
-                <td>${client.status === 1 ? 'Activo' : 'Inactivo'}</td>
                 <td>
                     <button class="button" onclick="fetchClientById(${client.idClient})">Editar</button>
                     <button class="button danger" onclick="deleteClient(${client.idClient})">Eliminar</button>
@@ -217,18 +242,18 @@ window.onclick = function (event) {
 document.getElementById('client-form').addEventListener('submit', function (event) {
     event.preventDefault(); // Evitar el envío del formulario por defecto
 
-    // Obtener los datos del formulario
     const name = document.getElementById('name').value;
     const phone = document.getElementById('phone').value;
 
-    // Crear el objeto cliente
+    const validatedData = validateClientForm(name, phone);
+    if (!validatedData) return; // Detener si los datos no son válidos
+
     const clientData = {
-        nameClient: name,
-        phoneClient: phone,
+        nameClient: validatedData.name,
+        phoneClient: validatedData.phone,
         status: true // Asegurar que el estado sea true al crear un cliente
     };
 
-    // Llamar a la función para crear el cliente
     createClient(clientData);
 });
 

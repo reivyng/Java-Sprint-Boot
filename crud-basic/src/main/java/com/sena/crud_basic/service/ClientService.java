@@ -11,7 +11,7 @@ import java.util.List;
 public class ClientService {
 
     @Autowired
-    private IClientRepository clientRepository;
+    private IClientRepository clientRepository; 
 
     // Listar todos los valores activos
     public List<clientDTO> getAllClients() {
