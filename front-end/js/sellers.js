@@ -1,6 +1,6 @@
-const apiUrl = 'http://localhost:8080/api/v1/sellers';
+const apiUrlSellers = 'http://localhost:8080/api/v1/sellers';
 
-const apiEndpoints = {
+const apiEndpointsSellers = {
     fetchAll: '/obtener/',
     create: '/enviar/',
     filter: '/search/{filter}',
@@ -13,7 +13,7 @@ const apiEndpoints = {
 // Función para listar todos los vendedores
 async function fetchSellers() {
     try {
-        const response = await fetch(`${apiUrl}${apiEndpoints.fetchAll}`);
+        const response = await fetch(`${apiUrlSellers}${apiEndpointsSellers.fetchAll}`);
         if (!response.ok) {
             throw new Error('Error al obtener los vendedores');
         }
@@ -42,7 +42,7 @@ async function createSeller(sellerData) {
 
         sellerData.status = 1; // Activo por defecto
 
-        const response = await fetch(`${apiUrl}${apiEndpoints.create}`, {
+        const response = await fetch(`${apiUrlSellers}${apiEndpointsSellers.create}`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(sellerData), // Enviar los datos del vendedor
@@ -71,9 +71,9 @@ async function updateSeller(sellerData) {
 
         sellerData.status = 1; // Activo por defecto al editar
 
-        const endpoint = apiEndpoints.update.replace('{id}', sellerData.idSeller);
+        const endpoint = apiEndpointsSellers.update.replace('{id}', sellerData.idSeller);
 
-        const response = await fetch(`${apiUrl}${endpoint}`, {
+        const response = await fetch(`${apiUrlSellers}${endpoint}`, {
             method: 'PUT',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(sellerData),
@@ -101,9 +101,9 @@ async function deleteSeller(sellerId) {
     }
 
     try {
-        const endpoint = apiEndpoints.delete.replace('{id}', sellerId);
+        const endpoint = apiEndpointsSellers.delete.replace('{id}', sellerId);
 
-        const response = await fetch(`${apiUrl}${endpoint}`, {
+        const response = await fetch(`${apiUrlSellers}${endpoint}`, {
             method: 'DELETE',
         });
 
@@ -128,9 +128,9 @@ async function deactivateSeller(sellerId) {
     }
 
     try {
-        const endpoint = apiEndpoints.deactivate.replace('{id}', sellerId);
+        const endpoint = apiEndpointsSellers.deactivate.replace('{id}', sellerId);
 
-        const response = await fetch(`${apiUrl}${endpoint}`, {
+        const response = await fetch(`${apiUrlSellers}${endpoint}`, {
            method: 'DELETE',
         });
 
@@ -154,15 +154,15 @@ async function searchSellers(filter, searchType) {
 
         if (searchType === 'id') {
             // Buscar por ID
-            endpoint = apiEndpoints.getById.replace('{id}', filter);
+            endpoint = apiEndpointsSellers.getById.replace('{id}', filter);
         } else if (searchType === 'name') {
             // Buscar por Nombre
-            endpoint = apiEndpoints.filter.replace('{filter}', encodeURIComponent(filter));
+            endpoint = apiEndpointsSellers.filter.replace('{filter}', encodeURIComponent(filter));
         } else {
             throw new Error('Tipo de búsqueda no válido');
         }
 
-        const response = await fetch(`${apiUrl}${endpoint}`);
+        const response = await fetch(`${apiUrlSellers}${endpoint}`);
         if (!response.ok) {
             throw new Error('Error al buscar vendedores');
         }
@@ -198,7 +198,7 @@ function renderSellers(sellers) {
 // Función para obtener un vendedor por ID y cargarlo en el formulario
 async function fetchSellerById(sellerId) {
     try {
-        const response = await fetch(`${apiUrl}/${sellerId}`);
+        const response = await fetch(`${apiUrlSellers}/${sellerId}`);
         if (!response.ok) {
             throw new Error('Error al obtener el vendedor');
         }
@@ -226,6 +226,9 @@ function toggleForm() {
     const modal = document.getElementById('add-seller-modal');
     modal.style.display = modal.style.display === 'none' || modal.style.display === '' ? 'flex' : 'none';
 }
+
+// Asociar el botón "Agregar Vendedor" con el formulario
+document.getElementById('add-seller').addEventListener('click', toggleForm);
 
 // Cerrar el modal al hacer clic fuera de él
 window.onclick = function (event) {

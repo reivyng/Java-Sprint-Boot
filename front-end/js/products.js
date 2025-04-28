@@ -1,6 +1,6 @@
-const apiUrl = 'http://localhost:8080/api/v1/products';
+const apiUrlProducts = 'http://localhost:8080/api/v1/products';
 
-const apiEndpoints = {
+const apiEndpointsProducts = {
     fetchAll: '/obtener/',
     create: '/enviar/',
     filter: '/search/{filter}',
@@ -13,7 +13,7 @@ const apiEndpoints = {
 // Función para listar todos los productos
 async function fetchProducts() {
     try {
-        const response = await fetch(`${apiUrl}${apiEndpoints.fetchAll}`);
+        const response = await fetch(`${apiUrlProducts}${apiEndpointsProducts.fetchAll}`);
         if (!response.ok) {
             if (response.status === 400) {
                 throw new Error('Solicitud inválida. Verifica los datos enviados.');
@@ -38,7 +38,7 @@ async function createProduct(productData) {
         productData.status = 1;
 
         console.log('Llamando a createProduct con datos:', productData); // Depuración
-        const response = await fetch(`${apiUrl}${apiEndpoints.create}`, {
+        const response = await fetch(`${apiUrlProducts}${apiEndpointsProducts.create}`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(productData),
@@ -66,14 +66,14 @@ async function createProduct(productData) {
 // Función para actualizar un producto
 async function updateProduct(productData) {
     try {
-        const endpoint = apiEndpoints.update.replace('{id}', productData.idProduct);
+        const endpoint = apiEndpointsProducts.update.replace('{id}', productData.idProduct);
 
         // Asegurarse de que el estado del producto se mantenga activo si no se especifica
         if (!productData.status) {
             productData.status = 1; // Estado activo por defecto
         }
 
-        const response = await fetch(`${apiUrl}${endpoint}`, {
+        const response = await fetch(`${apiUrlProducts}${endpoint}`, {
             method: 'PUT',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(productData),
@@ -111,9 +111,9 @@ async function deleteProduct(productId) {
     }
 
     try {
-        const endpoint = apiEndpoints.delete.replace('{id}', productId);
+        const endpoint = apiEndpointsProducts.delete.replace('{id}', productId);
 
-        const response = await fetch(`${apiUrl}${endpoint}`, {
+        const response = await fetch(`${apiUrlProducts}${endpoint}`, {
             method: 'DELETE',
         });
 
@@ -147,8 +147,8 @@ async function deactivateProduct(productId) {
             return;
         }
 
-        const endpoint = apiEndpoints.deactivate.replace('{id}', productId);
-        const response = await fetch(`${apiUrl}${endpoint}`, { method: 'DELETE' });
+        const endpoint = apiEndpointsProducts.deactivate.replace('{id}', productId);
+        const response = await fetch(`${apiUrlProducts}${endpoint}`, { method: 'DELETE' });
 
         if (!response.ok) {
             const errorMessage = await response.text();
@@ -172,15 +172,15 @@ async function searchProducts(filter, searchType) {
 
         if (searchType === 'id') {
             // Buscar por ID
-            endpoint = apiEndpoints.getById.replace('{id}', filter);
+            endpoint = apiEndpointsProducts.getById.replace('{id}', filter);
         } else if (searchType === 'name' || searchType === 'price') {
             // Buscar por Nombre o Precio
-            endpoint = apiEndpoints.filter.replace('{filter}', encodeURIComponent(filter));
+            endpoint = apiEndpointsProducts.filter.replace('{filter}', encodeURIComponent(filter));
         } else {
             throw new Error('Tipo de búsqueda no válido');
         }
 
-        const response = await fetch(`${apiUrl}${endpoint}`);
+        const response = await fetch(`${apiUrlProducts}${endpoint}`);
         if (!response.ok) {
             throw new Error('Error al buscar productos');
         }
@@ -217,7 +217,7 @@ function renderProducts(products) {
 // Función para obtener un producto por ID y cargarlo en el formulario
 async function fetchProductById(productId) {
     try {
-        const response = await fetch(`${apiUrl}/${productId}`);
+        const response = await fetch(`${apiUrlProducts}/${productId}`);
         if (!response.ok) {
             if (response.status === 400) {
                 throw new Error('Solicitud inválida. Verifica los datos enviados.');
@@ -260,7 +260,7 @@ async function validateForm(name, price, currentProductId = null) {
 
 // Verificar si el nombre del producto ya existe
 async function isProductNameDuplicate(name, currentProductId = null) {
-    const response = await fetch(`${apiUrl}${apiEndpoints.fetchAll}`);
+    const response = await fetch(`${apiUrlProducts}${apiEndpointsProducts.fetchAll}`);
     const products = await response.json();
 
     // Verificar si el nombre ya existe en otro producto
@@ -274,6 +274,14 @@ function toggleForm() {
     const modal = document.getElementById('add-product-modal');
     modal.style.display = modal.style.display === 'none' || modal.style.display === '' ? 'flex' : 'none';
 }
+
+// Asociar el botón "Agregar Producto" con el formulario
+document.getElementById('add-product').addEventListener('click', function () {
+    document.getElementById('product-id').value = ''; // Limpiar el campo oculto de ID
+    document.getElementById('name').value = ''; // Limpiar el campo de nombre
+    document.getElementById('price').value = ''; // Limpiar el campo de precio
+    toggleForm(); // Mostrar el formulario
+});
 
 // Cerrar el modal al hacer clic fuera de él
 window.onclick = function (event) {

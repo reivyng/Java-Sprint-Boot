@@ -1,7 +1,7 @@
 // URL base de la API
-const apiUrl = 'http://localhost:8080/api/v1/clients';
+const apiUrlClients = 'http://localhost:8080/api/v1/clients';
 
-const apiEndpoints = {
+const apiEndpointsClients = {
     fetchAll: '/obtener/',
     search: '/search/',
     filter: '/search/{filter}',
@@ -15,7 +15,7 @@ const apiEndpoints = {
 // Función para listar todos los clientes activos
 async function fetchActiveClients() {
     try {
-        const response = await fetch(`${apiUrl}${apiEndpoints.fetchAll}`);
+        const response = await fetch(`${apiUrlClients}${apiEndpointsClients.fetchAll}`);
         if (!response.ok) {
             throw new Error('Error al obtener los clientes activos');
         }
@@ -30,9 +30,9 @@ async function fetchActiveClients() {
 async function searchClients(filter) {
     try {
         // Reemplazar {filter} con el valor del filtro proporcionado
-        const endpoint = apiEndpoints.filter.replace('{filter}', encodeURIComponent(filter));
+        const endpoint = apiEndpointsClients.filter.replace('{filter}', encodeURIComponent(filter));
 
-        const response = await fetch(`${apiUrl}${endpoint}`);
+        const response = await fetch(`${apiUrlClients}${endpoint}`);
         if (!response.ok) {
             throw new Error('Error al buscar clientes');
         }
@@ -49,9 +49,9 @@ async function searchClients(filter) {
 async function fetchClientById(clientId) {
     try {
         // Reemplazar {id} con el clientId en el endpoint
-        const endpoint = apiEndpoints.getById.replace('{id}', clientId);
+        const endpoint = apiEndpointsClients.getById.replace('{id}', clientId);
 
-        const response = await fetch(`${apiUrl}${endpoint}`);
+        const response = await fetch(`${apiUrlClients}${endpoint}`);
         if (!response.ok) {
             throw new Error('Error al obtener el cliente');
         }
@@ -95,7 +95,7 @@ async function createClient(clientData) {
     if (!validatedData) return; // Detener si los datos no son válidos
 
     try {
-        const response = await fetch(`${apiUrl}${apiEndpoints.create}`, {
+        const response = await fetch(`${apiUrlClients}${apiEndpointsClients.create}`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(clientData),
@@ -124,9 +124,9 @@ async function updateClient(clientData) {
     if (!validatedData) return; // Detener si los datos no son válidos
 
     try {
-        const endpoint = apiEndpoints.update.replace('{id}', clientData.idClient);
+        const endpoint = apiEndpointsClients.update.replace('{id}', clientData.idClient);
 
-        const response = await fetch(`${apiUrl}${endpoint}`, {
+        const response = await fetch(`${apiUrlClients}${endpoint}`, {
             method: 'PUT',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(clientData),
@@ -155,7 +155,7 @@ async function deleteClient(clientId) {
 
     try {
         // Realizar la solicitud DELETE al endpoint correspondiente
-        const response = await fetch(`${apiUrl}${apiEndpoints.delete.replace('{id}', clientId)}`, {
+        const response = await fetch(`${apiUrlClients}${apiEndpointsClients.delete.replace('{id}', clientId)}`, {
             method: 'DELETE',
         });
 
@@ -184,10 +184,10 @@ async function deactivateClient(clientId) {
 
     try {
         // Reemplazar {id} con el clientId en la URL
-        const endpoint = apiEndpoints.deactivate.replace('{id}', clientId);
+        const endpoint = apiEndpointsClients.deactivate.replace('{id}', clientId);
 
         // Realizar la solicitud DELETE
-        const response = await fetch(`${apiUrl}${endpoint}`, {
+        const response = await fetch(`${apiUrlClients}${endpoint}`, {
             method: 'DELETE',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ status: 0 }), // Si el backend requiere un cuerpo, envíalo
@@ -228,11 +228,37 @@ function renderClients(clients) {
     });
 }
 
-// Función para mostrar u ocultar el formulario
+// Mostrar/ocultar el formulario
 function toggleForm() {
-    const modal = document.getElementById('add-client-modal');
-    modal.style.display = modal.style.display === 'none' || modal.style.display === '' ? 'flex' : 'none';
+    const form = document.getElementById('add-client-modal');
+    form.style.display = form.style.display === 'none' ? 'block' : 'none';
 }
+
+// Asociar el botón "Agregar Cliente" con el formulario
+document.getElementById('add-client').addEventListener('click', toggleForm);
+
+document.getElementById('client-form').addEventListener('submit', function (event) {
+    event.preventDefault();
+
+    const clientId = document.getElementById('client-id').value;
+    const name = document.getElementById('name').value;
+    const phone = document.getElementById('phone').value;
+
+    const clientData = {
+        nameClient: name,
+        phoneClient: phone,
+        status: 1, // Enviar 1 para activo
+    };
+
+    if (clientId) {
+        // Si hay un ID, actualiza el cliente
+        clientData.idClient = clientId;
+        updateClient(clientData);
+    } else {
+        // Si no hay ID, crea un nuevo cliente
+        createClient(clientData);
+    }
+});
 
 // Cerrar el modal al hacer clic fuera de él
 window.onclick = function (event) {
@@ -241,25 +267,6 @@ window.onclick = function (event) {
         modal.style.display = 'none';
     }
 };
-
-// Manejar el envío del formulario
-document.getElementById('client-form').addEventListener('submit', function (event) {
-    event.preventDefault(); // Evitar el envío del formulario por defecto
-
-    const name = document.getElementById('name').value;
-    const phone = document.getElementById('phone').value;
-
-    const validatedData = validateClientForm(name, phone);
-    if (!validatedData) return; // Detener si los datos no son válidos
-
-    const clientData = {
-        nameClient: validatedData.name,
-        phoneClient: validatedData.phone,
-        status: true // Asegurar que el estado sea true al crear un cliente
-    };
-
-    createClient(clientData);
-});
 
 // Manejar el evento de búsqueda
 document.getElementById('search-form').addEventListener('submit', function (event) {

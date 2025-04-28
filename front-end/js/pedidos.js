@@ -1,7 +1,7 @@
 // URL base de la API
-const apiUrl = 'http://localhost:8080/api/v1/orders';
+const apiUrlOrders = 'http://localhost:8080/api/v1/orders';
 
-const apiEndpoints = {
+const apiEndpointsOrders = {
     fetchAll: '/obtener/',
     search: '/search/',
     filter: '/search/{filter}',
@@ -15,7 +15,7 @@ const apiEndpoints = {
 // Obtener todos los clientes
 async function fetchAllClients() {
     try {
-        const response = await fetch(apiUrl + apiEndpoints.fetchAll);
+        const response = await fetch(apiUrlOrders + apiEndpointsOrders.fetchAll);
         if (!response.ok) throw new Error('Error al obtener los clientes');
         const data = await response.json();
         console.log('Respuesta de la API:', data); // Inspecciona la respuesta aquí
@@ -28,7 +28,7 @@ async function fetchAllClients() {
 // Buscar un cliente por criterio
 async function searchClient(criteria) {
     try {
-        const response = await fetch(apiUrl + apiEndpoints.search + criteria);
+        const response = await fetch(apiUrlOrders + apiEndpointsOrders.search + criteria);
         if (!response.ok) throw new Error('Error al buscar el cliente');
         const data = await response.json();
         console.log(data);
@@ -41,7 +41,7 @@ async function searchClient(criteria) {
 // Crear un nuevo cliente
 async function createClient(clientData) {
     try {
-        const response = await fetch(apiUrl + apiEndpoints.create, {
+        const response = await fetch(apiUrlOrders + apiEndpointsOrders.create, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(clientData)
@@ -59,7 +59,7 @@ async function createClient(clientData) {
 async function createOrder(orderData) {
     try {
         console.log('Datos enviados al backend:', orderData); // Inspecciona los datos enviados
-        const response = await fetch(apiUrl + apiEndpoints.create, {
+        const response = await fetch(apiUrlOrders + apiEndpointsOrders.create, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(orderData)
@@ -76,8 +76,8 @@ async function createOrder(orderData) {
 // Actualizar un cliente existente
 async function updateClient(id, clientData) {
     try {
-        const endpoint = apiEndpoints.update.replace('{id}', id);
-        const response = await fetch(apiUrl + endpoint, {
+        const endpoint = apiEndpointsOrders.update.replace('{id}', id);
+        const response = await fetch(apiUrlOrders + endpoint, {
             method: 'PUT',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(clientData)
@@ -94,8 +94,8 @@ async function updateClient(id, clientData) {
 // Método para actualizar un pedido
 async function updateOrder(id, orderData) {
     try {
-        const endpoint = apiEndpoints.update.replace('{id}', id);
-        const response = await fetch(apiUrl + endpoint, {
+        const endpoint = apiEndpointsOrders.update.replace('{id}', id);
+        const response = await fetch(apiUrlOrders + endpoint, {
             method: 'PUT',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(orderData)
@@ -112,8 +112,8 @@ async function updateOrder(id, orderData) {
 // Eliminar un cliente físicamente
 async function deleteClient(id) {
     try {
-        const endpoint = apiEndpoints.delete.replace('{id}', id);
-        const response = await fetch(apiUrl + endpoint, { method: 'DELETE' });
+        const endpoint = apiEndpointsOrders.delete.replace('{id}', id);
+        const response = await fetch(apiUrlOrders + endpoint, { method: 'DELETE' });
         if (!response.ok) throw new Error('Error al eliminar el cliente');
         console.log('Cliente eliminado correctamente');
     } catch (error) {
@@ -124,9 +124,9 @@ async function deleteClient(id) {
 // Desactivar un pedido (eliminación lógica)
 async function deactivateClient(id) {
     try {
-        const endpoint = apiEndpoints.deactivate.replace('{id}', id);
-        console.log('Endpoint para desactivar:', apiUrl + endpoint); // Verifica la URL
-        const response = await fetch(apiUrl + endpoint, { method: 'DELETE' });
+        const endpoint = apiEndpointsOrders.deactivate.replace('{id}', id);
+        console.log('Endpoint para desactivar:', apiUrlOrders + endpoint); // Verifica la URL
+        const response = await fetch(apiUrlOrders + endpoint, { method: 'DELETE' });
         if (!response.ok) throw new Error('Error al desactivar el pedido');
         console.log('Pedido desactivado correctamente');
     } catch (error) {
@@ -315,15 +315,15 @@ async function searchPedidos(filter, searchType) {
 
         if (searchType === 'id') {
             // Buscar por ID
-            endpoint = apiEndpoints.getById.replace('{id}', filter);
+            endpoint = apiEndpointsOrders.getById.replace('{id}', filter);
         } else if (searchType === 'client' || searchType === 'seller') {
             // Buscar por Nombre del Cliente o Nombre del Vendedor
-            endpoint = apiEndpoints.filter.replace('{filter}', encodeURIComponent(filter));
+            endpoint = apiEndpointsOrders.filter.replace('{filter}', encodeURIComponent(filter));
         } else {
             throw new Error('Tipo de búsqueda no válido');
         }
 
-        const response = await fetch(`${apiUrl}${endpoint}`);
+        const response = await fetch(`${apiUrlOrders}${endpoint}`);
         if (!response.ok) {
             throw new Error('Error al buscar pedidos');
         }

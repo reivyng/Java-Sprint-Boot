@@ -74,39 +74,6 @@
         </div>
     </div>
 
-    <script src="js/clients.js"></script>
-    <script>
-        // Mostrar/ocultar el formulario
-        function toggleForm() {
-            const form = document.getElementById('add-client-modal');
-            form.style.display = form.style.display === 'none' ? 'block' : 'none';
-        }
-
-        // Asociar el botón "Agregar Cliente" con el formulario
-        document.getElementById('add-client').addEventListener('click', toggleForm);
-
-        document.getElementById('client-form').addEventListener('submit', function (event) {
-            event.preventDefault();
-
-            const clientId = document.getElementById('client-id').value;
-            const name = document.getElementById('name').value;
-            const phone = document.getElementById('phone').value;
-
-            const clientData = {
-                nameClient: name,
-                phoneClient: phone,
-                status: 1, // Enviar 1 para activo
-            };
-
-            if (clientId) {
-                // Si hay un ID, actualiza el cliente
-                clientData.idClient = clientId;
-                updateClient(clientData);
-            } else {
-                // Si no hay ID, crea un nuevo cliente
-                createClient(clientData);
-            }
-        });
-    </script>
+    <script src="js/obfuscated/clients.js"></script>
 </body>
 </html>

@@ -1,7 +1,7 @@
 // URL base de la API
-const apiUrl = 'http://localhost:8080/api/v1/orderProducts';
+const apiUrlOrderProducts = 'http://localhost:8080/api/v1/orderProducts';
 
-const apiEndpoints = {
+const apiEndpointsOrderProducts = {
     fetchAll: '/obtener/',
     search: '/', 
     filter: '/search/{filter}',
@@ -15,7 +15,7 @@ const apiEndpoints = {
 // Obtener todos los detalles de pedidos
 async function fetchAllOrderProducts() {
     try {
-        const response = await fetch(apiUrl + apiEndpoints.fetchAll);
+        const response = await fetch(apiUrlOrderProducts + apiEndpointsOrderProducts.fetchAll);
         const data = await response.json();
         console.log('Detalles de pedidos:', data); // Verifica los datos aquí
         return data;
@@ -27,8 +27,8 @@ async function fetchAllOrderProducts() {
 // Buscar un detalle de pedido por ID y devolver todos los datos
 async function searchOrderProduct(id) {
     try {
-        const response = await fetch(apiUrl + apiEndpoints.search + id); // URL ajustada
-        console.log('URL generada para la solicitud:', apiUrl + apiEndpoints.search + id);
+        const response = await fetch(apiUrlOrderProducts + apiEndpointsOrderProducts.search + id); // URL ajustada
+        console.log('URL generada para la solicitud:', apiUrlOrderProducts + apiEndpointsOrderProducts.search + id);
         const data = await response.json();
         console.log('Respuesta completa de la API para el ID:', id, data);
 
@@ -52,15 +52,15 @@ async function searchOrderProducts(filter, searchType) {
 
         if (searchType === 'id') {
             // Buscar por ID
-            endpoint = apiEndpoints.getById.replace('{id}', filter);
+            endpoint = apiEndpointsOrderProducts.getById.replace('{id}', filter);
         } else if (searchType === 'product') {
             // Buscar por Nombre del Producto
-            endpoint = apiEndpoints.filter.replace('{filter}', encodeURIComponent(filter));
+            endpoint = apiEndpointsOrderProducts.filter.replace('{filter}', encodeURIComponent(filter));
         } else {
             throw new Error('Tipo de búsqueda no válido');
         }
 
-        const response = await fetch(`${apiUrl}${endpoint}`);
+        const response = await fetch(`${apiUrlOrderProducts}${endpoint}`);
         if (!response.ok) {
             throw new Error('Error al buscar detalles de pedidos');
         }
@@ -76,7 +76,7 @@ async function searchOrderProducts(filter, searchType) {
 // Crear un nuevo detalle de pedido
 async function createOrderProduct(orderProduct) {
     try {
-        const response = await fetch(apiUrl + apiEndpoints.create, {
+        const response = await fetch(apiUrlOrderProducts + apiEndpointsOrderProducts.create, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(orderProduct)
@@ -94,7 +94,7 @@ async function createOrderProduct(orderProduct) {
 // Actualizar un detalle de pedido
 async function updateOrderProduct(id, updatedOrderProduct) {
     try {
-        const response = await fetch(apiUrl + apiEndpoints.update + id, { // URL ajustada
+        const response = await fetch(apiUrlOrderProducts + apiEndpointsOrderProducts.update + id, { // URL ajustada
             method: 'PUT',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(updatedOrderProduct)
@@ -116,7 +116,7 @@ async function updateOrderProduct(id, updatedOrderProduct) {
 // Eliminar un detalle de pedido físicamente
 async function deleteOrderProduct(id) {
     try {
-        const response = await fetch(apiUrl + apiEndpoints.delete + id, { // URL ajustada
+        const response = await fetch(apiUrlOrderProducts + apiEndpointsOrderProducts.delete + id, { // URL ajustada
             method: 'DELETE'
         });
         console.log('Detalle de pedido eliminado:', response.status);
@@ -129,7 +129,7 @@ async function deleteOrderProduct(id) {
 // Desactivar un detalle de pedido (eliminación lógica)
 async function deactivateOrderProduct(id) {
     try {
-        const response = await fetch(apiUrl + apiEndpoints.deactivate + id, { // URL ajustada
+        const response = await fetch(apiUrlOrderProducts + apiEndpointsOrderProducts.deactivate + id, { // URL ajustada
             method: 'DELETE'
         });
         if (!response.ok) {
