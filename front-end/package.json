@@ -6,7 +6,7 @@
   },
   "scripts": {
     "build:js": "terser ./js/*.js -o ./js/min/ --compress --mangle",
-    "obfuscate": "javascript-obfuscator ./js/clients.js --output ./js/obfuscated --compact true --control-flow-flattening true",
+    "obfuscate": "javascript-obfuscator ./js/principal.js --output ./js/obfuscated --compact true --control-flow-flattening true",
     "build:all": "npm run combine && npm run obfuscate"
   }
 }
