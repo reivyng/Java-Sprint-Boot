@@ -39,7 +39,7 @@ public class RateLimitFilter implements Filter {
     }
 
     private Bucket createNewBucket(String clientIp) {
-        Bandwidth limit = Bandwidth.classic(10, Refill.greedy(10, Duration.ofSeconds(30))); // 3 solicitudes cada 3 segundos
+        Bandwidth limit = Bandwidth.classic(10, Refill.greedy(10, Duration.ofSeconds(50))); // 3 solicitudes cada 3 segundos
         return Bucket4j.builder().addLimit(limit).build();
     }
 }
