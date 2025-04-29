@@ -45,7 +45,7 @@ async function searchClients(filter) {
     }
 }
 
-// Función para obtener un cliente por ID y mostrarlo en la tabla
+// Función para obtener un cliente por ID y rellenar el formulario para editar
 async function fetchClientById(clientId) {
     try {
         // Reemplazar {id} con el clientId en el endpoint
@@ -58,8 +58,13 @@ async function fetchClientById(clientId) {
 
         const client = await response.json();
 
-        // Renderizar el cliente en la tabla
-        renderClients([client]); // Pasar el cliente como un array para reutilizar la función
+        // Rellenar el formulario con los datos del cliente
+        document.getElementById('client-id').value = client.idClient;
+        document.getElementById('name').value = client.nameClient;
+        document.getElementById('phone').value = client.phoneClient;
+
+        // Abrir el formulario
+        toggleForm();
     } catch (error) {
         console.error('Error:', error);
         alert('No se pudo obtener el cliente. Inténtalo de nuevo.');
@@ -231,7 +236,19 @@ function renderClients(clients) {
 // Mostrar/ocultar el formulario
 function toggleForm() {
     const form = document.getElementById('add-client-modal');
-    form.style.display = form.style.display === 'none' ? 'block' : 'none';
+    form.style.display = form.style.display === 'none' || form.style.display === '' ? 'block' : 'none';
+
+    // Limpiar el formulario si se cierra
+    if (form.style.display === 'none') {
+        clearForm();
+    }
+}
+
+// Función para limpiar el formulario
+function clearForm() {
+    document.getElementById('client-id').value = '';
+    document.getElementById('name').value = '';
+    document.getElementById('phone').value = '';
 }
 
 // Asociar el botón "Agregar Cliente" con el formulario
