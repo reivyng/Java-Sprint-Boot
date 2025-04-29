@@ -5,6 +5,9 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 
 @Entity(name = "sellers")
 public class sellersDTO {
@@ -14,18 +17,21 @@ public class sellersDTO {
     @Column(name = "id")
     private int idSeller;
 
+    @NotBlank(message = "El nombre del vendedor no puede estar vacío")
+    @Size(max = 100, message = "El nombre del vendedor no puede exceder los 100 caracteres")
     @Column(name = "name", nullable = false, length = 100)
     private String nameSeller;
 
+    @NotNull(message = "El estado no puede ser nulo")
     @Column(name = "status")
-    private int status;
+    private Integer status;
 
     // Constructor vacío (necesario para JPA)
     public sellersDTO() {
     }
 
     // Constructor completo
-    public sellersDTO(int idSeller, String nameSeller, int status) {
+    public sellersDTO(int idSeller, String nameSeller, Integer status) {
         this.idSeller = idSeller;
         this.nameSeller = nameSeller;
         this.status = status;
@@ -48,11 +54,11 @@ public class sellersDTO {
         this.nameSeller = nameSeller;
     }
 
-    public int getStatus() {
+    public Integer getStatus() {
         return status;
     }
 
-    public void setStatus(int status) {
+    public void setStatus(Integer status) {
         this.status = status;
     }
 }

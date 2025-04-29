@@ -7,6 +7,9 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.validation.constraints.DecimalMin;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotNull;
 
 @Entity(name = "order_products")
 public class OrderProductDTO {
@@ -16,23 +19,32 @@ public class OrderProductDTO {
     @Column(name = "id")
     private int idOrderProduct;
 
+    @NotNull(message = "La orden no puede ser nula")
     @ManyToOne
     @JoinColumn(name = "idOrders")
     private ordersDTO order;
 
+    @NotNull(message = "El producto no puede ser nulo")
     @ManyToOne
     @JoinColumn(name = "idProduct")
     private productsDTO product;
 
+    @NotNull(message = "El estado no puede ser nulo")
     @Column(name = "status")
-    private int status;
+    private Integer status;
 
+    @NotNull(message = "La cantidad no puede ser nula")
+    @Min(value = 1, message = "La cantidad debe ser al menos 1")
     @Column(name = "quantity", nullable = false)
     private int quantity;
 
+    @NotNull(message = "El precio no puede ser nulo")
+    @DecimalMin(value = "0.0", inclusive = false, message = "El precio debe ser mayor que 0")
     @Column(name = "price", nullable = false)
     private double price;
 
+    @NotNull(message = "El total no puede ser nulo")
+    @DecimalMin(value = "0.0", inclusive = false, message = "El total debe ser mayor que 0")
     @Column(name = "total", nullable = false)
     private double total;
 
@@ -41,7 +53,7 @@ public class OrderProductDTO {
     }
 
     // Constructor completo
-    public OrderProductDTO(int idOrderProduct, ordersDTO order, productsDTO product, int status, int quantity,
+    public OrderProductDTO(int idOrderProduct, ordersDTO order, productsDTO product, Integer status, int quantity,
             double price, double total) {
         this.idOrderProduct = idOrderProduct;
         this.order = order;
@@ -77,11 +89,11 @@ public class OrderProductDTO {
         this.product = product;
     }
 
-    public int getStatus() {
+    public Integer getStatus() {
         return status;
     }
 
-    public void setStatus(int status) {
+    public void setStatus(Integer status) {
         this.status = status;
     }
 
